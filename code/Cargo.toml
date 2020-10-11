@@ -1,0 +1,11 @@
+[package]
+name = "ferrite-book"
+version = "0.1.0"
+authors = ["Soares Chen <soares.chen@gmail.com>"]
+edition = "2018"
+
+[lib]
+
+[dependencies]
+ferrite = { git = "https://github.com/maybevoid/ferrite" }
+async-std = { version = "1.6.5", features = ["attributes"] }
