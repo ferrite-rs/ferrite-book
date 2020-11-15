@@ -11,12 +11,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
       - name: Setup mdBook
         uses: peaceiris/actions-mdbook@v1
         with:
           mdbook-version: '0.4.3'
 
       - run: mdbook build
+
+      - run: cd code && cargo test
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

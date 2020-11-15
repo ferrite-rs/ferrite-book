@@ -3,26 +3,27 @@
 mod hello_1 {
 
 // ANCHOR: hello_1
-use ferrite::*;
+use ferrite_session::*;
+
+type Hello = SendValue < String, End >;
 
 #[async_std::main]
 async fn main () {
-  let session :
-    Session <
-      SendValue < String, End >
-    > =
+  // ANCHOR: hello_provider
+  let hello_provider : Session < Hello > =
     send_value! (
       "Hello World!".to_string(),
       terminate! () );
+  // ANCHOR_END: hello_provider
 
-  let result =
-    run_session_with_result ( session ).await;
+  // ANCHOR: run_session_with_result
+  let result : String =
+    run_session_with_result ( hello_provider ).await;
 
   println!("{}", result);
-  // ANCHOR_END: hello_1
-
-  assert_eq!(result, "Hello World!");
+  // ANCHOR_END: run_session_with_result
 }
+// ANCHOR_END: hello_1
 
 #[test]
 fn test_main () {
@@ -33,48 +34,46 @@ fn test_main () {
 
 mod hello_2 {
 
-use ferrite::*;
+// ANCHOR: hello_2
+use ferrite_session::*;
+
+type Hello = SendValue < String, End >;
 
 #[async_std::main]
 async fn main () {
+  let hello_provider : Session < Hello > =
+    send_value! (
+      "Hello World!".to_string(),
+      terminate() );
 
-// ANCHOR: hello_2
-use std::time::Duration;
-use async_std::task::sleep;
+  // ANCHOR: hello_client
+  let hello_client :
+    Session <
+      ReceiveChannel < Hello, End >
+    > =
+    receive_channel! ( provider => {
+      receive_value_from! ( provider, greeting => {
+        println! ( "Received greetings from provider: {}", greeting );
 
-let hello_provider :
-  Session <
-    SendValue < String, End >
-  > =
-  send_value! (
-    {
-      sleep(Duration::from_secs(2)).await;
-      "Hello World!".to_string()
-    },
-    terminate() );
+        wait! ( provider, terminate! () )
+      })
+    });
+  // ANCHOR_END: hello_client
 
-let hello_client :
-  Session <
-    ReceiveChannel <
-      SendValue < String, End >,
-      End
-    >
-  > =
-  receive_channel! ( provider => {
-    receive_value_from! ( provider, greeting => {
-      println! ( "Received greetings from provider: {}", greeting );
+  // ANCHOR: apply_channel
+  let main : Session < End > =
+    apply_channel ( hello_client, hello_provider );
+  // ANCHOR_END: apply_channel
 
-      wait! ( provider,
-        terminate! () )
-    })
-  });
-
-let session : Session < End > =
-  apply_channel ( hello_client, hello_provider );
-
-run_session ( session ).await;
+  // ANCHOR: run_session
+  run_session ( main ).await;
+  // ANCHOR_END: run_session
+}
 // ANCHOR_END: hello_2
 
+#[test]
+fn test_main () {
+  main();
 }
 
 }
