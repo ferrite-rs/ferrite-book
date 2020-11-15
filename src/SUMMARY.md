@@ -1,6 +1,6 @@
 # Summary
 
-- [Writing Session-Typed Programs in Ferrite](./ferrite.md)
+- [Writing Session-Typed Ferrite Programs in Rust](./ferrite.md)
 
 - [Getting Started](./01-getting-started/00-getting-started.md)
   - [Installation](./01-getting-started/01-installation.md)

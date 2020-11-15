@@ -1,6 +1,6 @@
-# Writing Session-Typed Programs in Ferrite (Draft)
+# Writing Session-Typed Ferrite Programs in Rust (Draft)
 
-Welcome to Writing Session-Typed Programs in Ferrite!
+Welcome to Writing Session-Typed Ferrite Programs in Rust!
 This is an introductory guide on how to use
 [Ferrite](https://github.com/maybevoid/ferrite),
 an EDSL (embedded domain specific language),

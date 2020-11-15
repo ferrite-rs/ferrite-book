@@ -3,7 +3,7 @@ authors = ["Soares Chen"]
 language = "en"
 multilingual = false
 src = "src"
-title = "Writing Session Types Programs in Ferrite"
+title = "Writing Session-Typed Ferrite Programs in Rust"
 
 [build]
 create-missing = false
