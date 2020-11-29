@@ -357,7 +357,7 @@ indicating that it is a Ferrite program offering the session type
 end point to communicate with a provider that offers the channel's session type.
 At high level, we can think of receiving a channel using <code>ReceiveChannel &lt; A, B &gt;</code>
 is similar to plain Rust functions with function traits like <code>FnOnce (A) -&gt; B</code>.
-In other words, <code>ReceiveChannel</code> is equivalent to function types in Ferrite.</p>
+In other words, <code>ReceiveChannel</code> is the equivalent of function types in Ferrite.</p>
 <p>There is however one important distinction of <code>ReceiveChannel</code> from regular
 Rust functions. That is channels received from <code>ReceiveChannel</code> must be
 used <em>linearly</em>, i.e. they cannot be ignored or dropped.
@@ -377,8 +377,7 @@ To implement such a session type, we can implement <code>hello_client</code> as 
     receive_channel! ( provider =&gt; {
       receive_value_from! ( provider, greeting =&gt; {
         println! ( &quot;Received greetings from provider: {}&quot;, greeting );
-
-        wait! ( provider, terminate! () )
+          wait! ( provider, terminate! () )
       })
     });
 <span class="boring">}
@@ -501,7 +500,7 @@ async fn main () {
   let hello_provider : Session &lt; Hello &gt; =
     send_value! (
       &quot;Hello World!&quot;.to_string(),
-      terminate() );
+      terminate! () );
 
   let hello_client :
     Session &lt;
@@ -510,8 +509,7 @@ async fn main () {
     receive_channel! ( provider =&gt; {
       receive_value_from! ( provider, greeting =&gt; {
         println! ( &quot;Received greetings from provider: {}&quot;, greeting );
-
-        wait! ( provider, terminate! () )
+          wait! ( provider, terminate! () )
       })
     });
 
@@ -522,10 +520,81 @@ async fn main () {
 }
 </code></pre></pre>
 <h1><a class="header" href="#type-errors" id="type-errors">Type Errors</a></h1>
+<p>The way we write a Ferrite program is quite different from how we typically
+write a Rust program. This is because Ferrite makes use of Rust's type system
+to provide additional safeguard on how session type channels can be used.</p>
+<p>We can take a quick look of some error messages raised when our Ferrite
+programs are written incorrectly.</p>
+<h2><a class="header" href="#an-incorrect-hello-provider" id="an-incorrect-hello-provider">An Incorrect Hello Provider</a></h2>
+<p>Let's consider the <code>hello_provider</code> program that we have written in the
+previous chapter:</p>
 <pre><pre class="playground"><code class="language-rust edition2018">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>let hello_client :
+</span>  let hello_provider : Session &lt; Hello &gt; =
+    send_value! (
+      &quot;Hello World!&quot;.to_string(),
+      terminate! () );
+<span class="boring">}
+</span></code></pre></pre>
+<p>According to the <code>Hello</code> protocol, <code>SendValue &lt; String, End &gt;</code>,
+<code>hello_provider</code> is supposed to send a string value before terminating.
+But what if we implement <code>hello_provider</code> such that it terminates
+immediately without sending a string?</p>
+<pre><pre class="playground"><code class="language-rust edition2018">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hello_provider_incorrect : Session &lt; Hello &gt; = terminate! ();
+<span class="boring">}
+</span></code></pre></pre>
+<p>In this case, if we try to compile our program, we would get a compile
+error from Rust showing a message similar to as follows:</p>
+<pre><code>error[E0308]: mismatched types
+  |
+  |   let hello_provider_incorrect : Session &lt; Hello &gt; =
+  |                        ----------------- expected due to this
+  |     terminate! ();
+  |     ^^^^^^^^^^^^^ expected struct `SendValue`, found struct `End`
+  |
+   = note: expected struct `PartialSession &lt; (), SendValue &lt; String, End &gt; &gt;`
+              found struct `PartialSession &lt; _, End &gt;`
+</code></pre>
+<p>The error message above has been slightly prettified to make it more readable,
+but the content remains the same. First of all, we see that the error is about
+type mismatch between a <code>PartialSession</code> type, which we will cover in a
+<a href="01-getting-started/../03-main-concepts/03-partial-sessions.html">later chapter</a>.</p>
+<p>Inside the second type parameter of <code>PartialSession</code>, notice that
+there is a mismatch between the expected session type
+<code>SendValue &lt; String, End &gt;</code>, and the actual session type <code>End</code>. From that,
+we can deduce that <code>hello_provider_incorrect</code> has violated the <code>Hello</code>
+protocol, by instead offering the protocol <code>End</code>.</p>
+<h2><a class="header" href="#an-incorrect-hello-client" id="an-incorrect-hello-client">An Incorrect Hello Client</a></h2>
+<p>The error message we get from <code>hello_provider_incorrect</code> is relatively simple,
+as the type mismatch is on the offered channel. On the other hand, recall that
+<code>hello_client</code> deals with <em>two</em> channels: one with the receiver end of <code>Hello</code>,
+and one that offers the session type <code>End</code>.</p>
+<pre><pre class="playground"><code class="language-rust edition2018">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>  let hello_client :
+    Session &lt;
+      ReceiveChannel &lt; Hello, End &gt;
+    &gt; =
+    receive_channel! ( provider =&gt; {
+      receive_value_from! ( provider, greeting =&gt; {
+        println! ( &quot;Received greetings from provider: {}&quot;, greeting );
+          wait! ( provider, terminate! () )
+      })
+    });
+<span class="boring">}
+</span></code></pre></pre>
+<p>Based on the protocol specification, it looks like <code>hello_client</code> should be able
+to receive a <code>Hello</code> channel, ignores the channel, and proceed to terminate
+immediately. So let's try implementing a new client to do just that:</p>
+<pre><pre class="playground"><code class="language-rust edition2018">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hello_client_incorrect :
   Session &lt;
     ReceiveChannel &lt; Hello, End &gt;
   &gt; =
@@ -534,13 +603,66 @@ async fn main () {
   });
 <span class="boring">}
 </span></code></pre></pre>
-<pre><code>error[E0277]: the trait bound `(SendValue&lt;String, End&gt;, ()): EmptyContext` is not satisfied
+<p>In <code>hello_client_incorrect</code>, the <code>provider</code> channel is ignored after we have received
+it, and we proceed to call <code>terminate!</code> immediately. If we try to build this,
+we would instead get the following compile error:</p>
+<pre><code>error[E0277]: the trait bound `( SendValue &lt; String, End &gt;, () ): EmptyContext` is not satisfied
   |
   |  terminate! ()
-  |  ^^^^^^^^^^^^^ the trait `EmptyContext` is not implemented for `(SendValue&lt;String, End&gt;, ())`
+  |  ^^^^^^^^^^^^^ the trait `EmptyContext` is not implemented for `( SendValue &lt; String, End &gt;, () )`
 </code></pre>
-<h2><a class="header" href="#linear-context" id="linear-context">Linear Context</a></h2>
-<p>(TODO)</p>
+<p>The error can look a bit scary, but it mainly boils down to two constructs:
+a new type <code>( SendValue &lt; String, End &gt;, () )</code> and a new trait <code>EmptyContext</code>.</p>
+<p>The type <code>( SendValue &lt; String, End &gt;, () )</code> represents the <em>linear context</em> in
+<code>hello_client_incorrect</code>, when the expression <code>terminate!()</code> is called. We will
+cover the details of linear context in a
+<a href="01-getting-started/../03-main-concepts/02-linear-context.html">later chapter</a>. For now it is sufficient
+to know that it is used to track the <code>provider</code> channel we have just received,
+and it has the session type <code>SendValue &lt; String, End &gt;</code>.</p>
+<p>The <code>EmptyContext</code> trait is essentially telling us that in order to use the
+<code>terminate!()</code> construct, the current linear context must be empty.
+However because we have not yet used up the <code>provider</code> channel, the
+linear context is thus not empty, and so we cannot terminate just yet.</p>
+<h2><a class="header" href="#enforcing-linear-usage-at-compile-time" id="enforcing-linear-usage-at-compile-time">Enforcing Linear Usage at Compile Time</a></h2>
+<p>The error from <code>hello_client_incorrect</code> shows us how Ferrite enforces linear
+usage of session type channels at compile time. This can greatly reduce the
+chance of us writing incorrect Ferrite programs that just abort in the
+middle of communicating with other processes.</p>
+<p>The linear usage of Ferrite channels is different from the <em>affine</em> usage
+of Rust objects. Consider an equivalent of <code>hello_client</code> implemented
+using <a href="https://doc.rust-lang.org/std/sync/mpsc/fn.channel.html">Rust channels</a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2018">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn hello_client_rust ( receiver: Receiver &lt; String &gt; ) {
+  // drops receiver immediately
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>In standard Rust programs, we establish communication between concurrent
+processes by explicitly passing the sender or receiver end of a Rust channel
+as function argument. However since the Rust channel is just an affine
+Rust object, it is possible that one party drops the channel half way,
+intentionally or not.</p>
+<p>In the simple case of our <code>Hello</code> protocol, the dropping of a channel
+might not seem critical. But what if the protocol is slightly more complicated?</p>
+<p>Let's say we have an <code>Ping</code> protocol with the session type
+<code>ReceiveValue &lt; String, SendValue &lt; String, End &gt; &gt;</code>. This would require the
+provider to receive a string value before sending back another string value,
+and vice versa for the client. If a client drops the channel without
+sending a value to the provider, the provider would potentially wait forever
+without receiving the string.</p>
+<p>Even if the provider can somehow detect that the client has dropped the
+channel half way, it would still have to raise a runtime error to signal
+the error on protocol violation. We would then have to write a lot of
+tests to make sure such errors never happen in practice. Even so the
+tests may not be exhaustive enough to cover all corner cases.</p>
+<p>By enforcing the linear usage of channels at compile time, Ferrite helps
+eliminate a broad range of communication errors that can happen due to
+incorrect implementations. As we will see in later chapters, using Ferrite
+we can safely implement complex communication protocols in our Rust programs,
+without having to worry about our programs not correctly following
+these protocols.</p>
 <h1><a class="header" href="#session-types" id="session-types">Session Types</a></h1>
 <p>(TODO)</p>
 <h1><a class="header" href="#macros" id="macros">Macros</a></h1>

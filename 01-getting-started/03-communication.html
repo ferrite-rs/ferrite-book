@@ -188,7 +188,7 @@ indicating that it is a Ferrite program offering the session type
 end point to communicate with a provider that offers the channel's session type.
 At high level, we can think of receiving a channel using <code>ReceiveChannel &lt; A, B &gt;</code>
 is similar to plain Rust functions with function traits like <code>FnOnce (A) -&gt; B</code>.
-In other words, <code>ReceiveChannel</code> is equivalent to function types in Ferrite.</p>
+In other words, <code>ReceiveChannel</code> is the equivalent of function types in Ferrite.</p>
 <p>There is however one important distinction of <code>ReceiveChannel</code> from regular
 Rust functions. That is channels received from <code>ReceiveChannel</code> must be
 used <em>linearly</em>, i.e. they cannot be ignored or dropped.
@@ -208,8 +208,7 @@ To implement such a session type, we can implement <code>hello_client</code> as 
     receive_channel! ( provider =&gt; {
       receive_value_from! ( provider, greeting =&gt; {
         println! ( &quot;Received greetings from provider: {}&quot;, greeting );
-
-        wait! ( provider, terminate! () )
+          wait! ( provider, terminate! () )
       })
     });
 <span class="boring">}
@@ -332,7 +331,7 @@ async fn main () {
   let hello_provider : Session &lt; Hello &gt; =
     send_value! (
       &quot;Hello World!&quot;.to_string(),
-      terminate() );
+      terminate! () );
 
   let hello_client :
     Session &lt;
@@ -341,8 +340,7 @@ async fn main () {
     receive_channel! ( provider =&gt; {
       receive_value_from! ( provider, greeting =&gt; {
         println! ( &quot;Received greetings from provider: {}&quot;, greeting );
-
-        wait! ( provider, terminate! () )
+          wait! ( provider, terminate! () )
       })
     });
 
