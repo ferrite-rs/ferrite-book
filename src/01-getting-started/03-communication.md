@@ -1,4 +1,3 @@
-
 # Client Communication
 
 In the previous chapter, we defined a hello provider and then run it
@@ -32,7 +31,7 @@ Ferrite allows sending and receiving of _channels_, which represent the client
 end point to communicate with a provider that offers the channel's session type.
 At high level, we can think of receiving a channel using `ReceiveChannel < A, B >`
 is similar to plain Rust functions with function traits like `FnOnce (A) -> B`.
-In other words, `ReceiveChannel` is equivalent to function types in Ferrite.
+In other words, `ReceiveChannel` is the equivalent of function types in Ferrite.
 
 There is however one important distinction of `ReceiveChannel` from regular
 Rust functions. That is channels received from `ReceiveChannel` must be
@@ -47,7 +46,7 @@ a channel of session type `Hello`, and then terminates with `End`.
 To implement such a session type, we can implement `hello_client` as follows:
 
 ```rust
-{{#include ../../code/src/hello.rs:hello_client}}
+{{#include ../../code/src/hello_2.rs:hello_client}}
 ```
 
 Our `hello_client` body looks slightly more complicated than `hello_provider`.
@@ -128,7 +127,7 @@ explicitly ask Ferrite to perform the linking. This can be done
 using `apply_channel`:
 
 ```rust
-{{#include ../../code/src/hello.rs:apply_channel}}
+{{#include ../../code/src/hello_2.rs:apply_channel}}
 ```
 
 The `apply_channel` construct is provided by Ferrite to link a
@@ -153,7 +152,7 @@ Since `main` has the session type `End`, we can use the Ferrite construct
 `run_session` to run the program:
 
 ```rust
-{{#include ../../code/src/hello.rs:run_session}}
+{{#include ../../code/src/hello_2.rs:run_session}}
 ```
 
 `run_session` accepts any Ferrite program offering the session type `End`,
@@ -169,5 +168,5 @@ that is made of a `hello_provider` and a `hello_client` communicating
 with each others.
 
 ```rust
-{{#include ../../code/src/hello.rs:hello_2}}
+{{#include ../../code/src/hello_2.rs:hello_2}}
 ```

@@ -34,7 +34,7 @@ _continues_ as session type `End`, which happens to simply terminates.
 We first look at how a provider for the `Hello` protocol can be implemented:
 
 ```rust
-{{#include ../../code/src/hello.rs:hello_provider}}
+{{#include ../../code/src/hello_1.rs:hello_provider}}
 ```
 
 In the above example, we define a variable named `hello_provider`
@@ -64,7 +64,7 @@ Ferrite provides a special case for Ferrite programs that offer the session type
 `run_session_with_result`:
 
 ```rust
-{{#include ../../code/src/hello.rs:run_session_with_result}}
+{{#include ../../code/src/hello_1.rs:run_session_with_result}}
 ```
 
 Ferrite provides `run_session_with_result` as a default way of handling
@@ -83,7 +83,7 @@ After getting the result back, we can print the received string using
 Putting everything together, our first hello world program is written as follows:
 
 ```rust
-{{#include ../../code/src/hello.rs:hello_1}}
+{{#include ../../code/src/hello_1.rs:hello_1}}
 ```
 
 Our Rust program defines an async `main` function using the `#[async_std::main]`
