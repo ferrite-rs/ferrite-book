@@ -160,7 +160,70 @@
                 <div id="content" class="content">
                     <main>
                         <h1><a class="header" href="#session-types" id="session-types">Session Types</a></h1>
-<p>(TODO)</p>
+<p>This chapter provides some supplementary overview of session types,
+the type theory that Ferrite is based on. In the discussion we
+will talk about some concepts related to
+<a href="https://en.wikipedia.org/wiki/Mathematical_logic">logic</a> and
+<a href="https://en.wikipedia.org/wiki/Type_theory">type theory</a>.
+For readers who are unfamiliar with these topics, feel free
+to skip this chapter and move on to the
+<a href="./06-macros.html">next chapter</a>.</p>
+<h2><a class="header" href="#background-on-session-types" id="background-on-session-types">Background on Session Types</a></h2>
+<p>So far we have been talking about session types without going into details
+what it is. Broadly speaking, session types can refer to a branch of
+type systems used to model structured communication-based
+programming.</p>
+<p>From the theoretical perspective,
+session types are related to
+<a href="https://plato.stanford.edu/entries/logic-linear/">linear logic</a>
+through the
+<a href="https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence">Curry–Howard correspondence</a>.
+This is in contrast with function languages based on lambda calculus, such as Rust,
+Haskell, and OCaml, which have correspondence with
+<a href="https://en.wikipedia.org/wiki/Natural_deduction">natural deduction</a>.
+Because of this, programming in session types may look unfamiliar to
+typical functional programming.</p>
+<p>Throughout this book, we will learn about various concepts of session types
+from the perspective of a Rust programmer. While this may not be a comprehensive
+overview to session types itself, we aim to cover enough of the basics
+so that you can explore deeper into session types through other resources.</p>
+<h2><a class="header" href="#intuitionistic-vs-classical-linear-logic" id="intuitionistic-vs-classical-linear-logic">Intuitionistic vs Classical Linear Logic</a></h2>
+<p>Since session types cover a family of programming languages, readers with
+some familiarity with session types may notice that Ferrite's implementation
+is quite different from some other session types implementations in
+<a href="https://github.com/Munksgaard/session-types">the</a>
+<a href="https://github.com/wenkokke/sesh">wild</a>.</p>
+<p>As a comparison, Ferrite's implementation of session types is based on
+<em>intuitionistic</em> linear logic. This is in contrast with the <em>classical</em>
+linear logic formulation that some other session types implementations
+are based on.</p>
+<p>From the programmers' perspective, there are some key differences when
+using the intuitionistic formulation of session types in Ferrite.
+For example, you may notice that there is a lack of <em>dualization</em> in
+Ferrite. This means that the session type signature remain the
+same from the perspective of both the provider and the client.</p>
+<p>As we have seen in the <a href="./03-communication.html">previous chapter</a>,
+while a provider sends a string value through a channel with
+the session type <code>SendValue &lt; String, End &gt;</code>, the client <em>receives</em>
+a value from a channel of the same session type. In comparison,
+in a classical formulation, the session type of the same
+channel for the client would instead have the session type
+<code>ReceiveValue &lt; String, End &gt;</code>.</p>
+<p>We leave it to informed readers to decide whether the intuitionistic formulation
+of Ferrite provides better intuition of programming in session types.
+For the purpose of this book, it is only important for us to clarify
+the distinctions, so that readers are better informed when comparing
+Ferrite with other session type implementations.</p>
+<h2><a class="header" href="#learn-more" id="learn-more">Learn More</a></h2>
+<p>If you are interested to learn more about session types, there are
+a wealth of type theoretic resources available. To get started,
+we recommend watching the OPLSS lecture
+<a href="https://www.youtube.com/watch?v=xYhGY0Lq8cw&amp;list=PL0DsGHMPLUWWyBBTpnTBKsYxdkbIoy1q8">Session-Typed Concurrent Programming</a>
+given by Stephanie Balzer, our co-author for Ferrite.
+The research group <a href="http://groups.inf.ed.ac.uk/abcd/index.html">ABCD</a>
+also publishes a comprehensive list of resources related to
+session types, including a list of
+<a href="http://groups.inf.ed.ac.uk/abcd/session-implementations.html">session types implementations</a>.</p>
 
                     </main>
 
