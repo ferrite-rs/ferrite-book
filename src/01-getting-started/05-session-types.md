@@ -60,10 +60,10 @@ channel for the client would instead have the session type
 `ReceiveValue < String, End >`.
 
 We leave it to informed readers to decide whether the intuitionistic formulation
-of Ferrite provides better intuition of programming in session types.
+of Ferrite provides better intuition for programming in session types.
 For the purpose of this book, it is only important for us to clarify
 the distinctions, so that readers are better informed when comparing
-Ferrite with other session type implementations.
+Ferrite with other session types implementations.
 
 ## Learn More
 
