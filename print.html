@@ -714,10 +714,10 @@ in a classical formulation, the session type of the same
 channel for the client would instead have the session type
 <code>ReceiveValue &lt; String, End &gt;</code>.</p>
 <p>We leave it to informed readers to decide whether the intuitionistic formulation
-of Ferrite provides better intuition of programming in session types.
+of Ferrite provides better intuition for programming in session types.
 For the purpose of this book, it is only important for us to clarify
 the distinctions, so that readers are better informed when comparing
-Ferrite with other session type implementations.</p>
+Ferrite with other session types implementations.</p>
 <h2><a class="header" href="#learn-more" id="learn-more">Learn More</a></h2>
 <p>If you are interested to learn more about session types, there are
 a wealth of type theoretic resources available. To get started,
@@ -729,7 +729,91 @@ also publishes a comprehensive list of resources related to
 session types, including a list of
 <a href="http://groups.inf.ed.ac.uk/abcd/session-implementations.html">session types implementations</a>.</p>
 <h1><a class="header" href="#macros" id="macros">Macros</a></h1>
-<p>(TODO)</p>
+<p>Ferrite provides lightweight macros to make it easier to write Ferrite programs.
+For most of the macros, there is a corresponding Ferrite function of the same
+name available. For instance, the <code>receive_value_from!</code> macro desugars into
+a function call to <code>receive_value_from</code>.</p>
+<p>The main purpose for the macros in Ferrite is to reduce various boilerplate
+code. For instance, to allow async/await code inside Ferrite programs,
+Ferrite requires continuation closures to be passed as
+<a href="https://github.com/rust-lang/rfcs/blob/master/text/2394-async_await.md#async--closures">async closures</a>.</p>
+<h2><a class="header" href="#hello-world-without-macros" id="hello-world-without-macros">Hello World Without Macros</a></h2>
+<p>The macros provided by Ferrite is completely optional, and it is feasible
+to write readable Ferrite programs without the help of macros. As an example,
+the previous hello world example in the <a href="01-getting-started/./03-communication.html">previous chapter</a>
+can be rewritten without macros as follows:</p>
+<pre><pre class="playground"><code class="language-rust edition2018">#[async_std::main]
+async fn main () {
+  let hello_provider : Session &lt; Hello &gt; =
+    send_value (
+      &quot;Hello World!&quot;.to_string(),
+      terminate () );
+
+  let hello_client :
+    Session &lt;
+      ReceiveChannel &lt; Hello, End &gt;
+    &gt; =
+    receive_channel ( move | provider | async move {
+      receive_value_from ( provider, move | greeting | async move {
+        println! ( &quot;Received greetings from provider: {}&quot;, greeting );
+          wait ( provider, terminate () )
+      })
+    });
+
+  let main : Session &lt; End &gt; =
+    apply_channel ( hello_client, hello_provider );
+
+  run_session ( main ).await;
+}
+</code></pre></pre>
+<p>Compared to the <a href="01-getting-started/./03-communication.html#full-program">original code</a>, we can
+see that macro calls such as <code>receive_value_from! ( provider, greeting =&gt; { ... })</code>
+are desugared to <code>receive_value_from ( provider, move | greeting | async move { ... }</code>.
+In other words, the body of our continuation is passed as an async closure
+to the <code>receive_value_from</code> function.</p>
+<h2><a class="header" href="#async-closures" id="async-closures">Async Closures</a></h2>
+<p>The verbose syntax of <code>move | | async move { ... }</code> is required here, because the
+new syntax for async closure, <code>async move | | { ... }</code>, is currently still being
+stabilized in Rust. Nevertheless, if we use Rust nightly and
+enables <code>#![feature(async_closure)]</code>, we can also rewrite our macro-less
+Ferrite program as follows:</p>
+<pre><pre class="playground"><code class="language-rust edition2018">#[async_std::main]
+async fn main () {
+  let hello_provider : Session &lt; Hello &gt; =
+    send_value (
+      &quot;Hello World!&quot;.to_string(),
+      terminate () );
+
+  let hello_client :
+    Session &lt;
+      ReceiveChannel &lt; Hello, End &gt;
+    &gt; =
+    receive_channel ( async move | provider | {
+      receive_value_from ( provider, async move | greeting | {
+        println! ( &quot;Received greetings from provider: {}&quot;, greeting );
+          wait ( provider, terminate () )
+      })
+    });
+
+  let main : Session &lt; End &gt; =
+    apply_channel ( hello_client, hello_provider );
+
+  run_session ( main ).await;
+}
+</code></pre></pre>
+<h2><a class="header" href="#macros-in-complex-ferrite-programs" id="macros-in-complex-ferrite-programs">Macros in Complex Ferrite Programs</a></h2>
+<p>For the case of our hello world example, the difference between the version
+with macros and the version without macros might not look significant.
+However as we write more complex Ferrite programs, the savings of
+having to repeatedly typing keywords like <code>async move</code> can become
+significant.</p>
+<p>Nevertheless, it is also important to understand the desugared function
+constructs behind the macro calls in Ferrite. With a good understanding
+of the desugared constructs, it can be much easier to debug a Ferrite
+program when we encounter any type error when writing Ferrite programs.</p>
+<p>In upcoming chapters, when a new Ferrite construct is introduced, we will
+cover both the macro version of the construct, as well as the plain
+function version of the construct.</p>
 
                     </main>
 
