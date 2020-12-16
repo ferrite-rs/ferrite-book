@@ -676,43 +676,88 @@ to skip this chapter and move on to the
 <p>So far we have been talking about session types without going into details
 what it is. Broadly speaking, session types can refer to a branch of
 type systems used to model structured communication-based
-programming.</p>
-<p>From the theoretical perspective,
-session types are related to
-<a href="https://plato.stanford.edu/entries/logic-linear/">linear logic</a>
-through the
-<a href="https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence">Curry–Howard correspondence</a>.
-This is in contrast with function languages based on lambda calculus, such as Rust,
-Haskell, and OCaml, which have correspondence with
-<a href="https://en.wikipedia.org/wiki/Natural_deduction">natural deduction</a>.
-Because of this, programming in session types may look unfamiliar to
-typical functional programming.</p>
+programming. Session types are also known as <em>behavioural types</em>, since
+the types describe the behaviour of a program.</p>
+<p>From the theoretical perspective, session types establish a
+<a href="https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence">correspondence</a>
+with <a href="https://plato.stanford.edu/entries/logic-linear/">linear logic</a>.
+This makes session-typed languages slightly different from functional
+languages such as Rust and Haskell, which have their roots in
+<a href="https://plato.stanford.edu/entries/lambda-calculus/">lambda calculus</a>
+and
+<a href="https://plato.stanford.edu/entries/logic-intuitionistic/">intuitionistic logic</a>.</p>
 <p>Throughout this book, we will learn about various concepts of session types
 from the perspective of a Rust programmer. While this may not be a comprehensive
-overview to session types itself, we aim to cover enough of the basics
-so that you can explore deeper into session types through other resources.</p>
+overview of session types themselves, we aim to cover enough of the basics
+so that you can explore more deeply into session types through other resources.</p>
+<h2><a class="header" href="#linear-affine-and-structural-rules" id="linear-affine-and-structural-rules">Linear, Affine, and Structural Rules</a></h2>
+<p>One notable distiction between session types and Rust is that session typed
+variables are <em>linear</em>, while Rust variables are <em>affine</em> by default.
+We will try to understand what that really means.</p>
+<p>A common explanation of linear vs affine is that linear variables must be
+used exactly once, while affine variables can be used at most once.
+However that is not entirely accurate.</p>
+<p>To be more precise, type theorists differentiate different kinds of
+type systems based on which
+<a href="https://en.wikipedia.org/wiki/Structural_rule">structural rules</a>
+are allowed in the type system:</p>
+<ul>
+<li>
+<p>In a normal type system like Haskell, variables are allowed to be used
+more than once (contraction). Variables are also allowed to be discarded
+(weakening).</p>
+</li>
+<li>
+<p>In an affine type system like Rust, variables are <em>not</em> allowed to be used
+more than once (no contraction), unless they specifically implement
+<code>Copy</code> or <code>Clone</code>.
+However variables are still allowed to be discarded (weakening).</p>
+</li>
+<li>
+<p>In a linear type system like Ferrite, variables are <em>not</em> allowed to be
+used more than once (no contraction), and variables are <em>not</em> allowed to
+be discarded (no weakening).</p>
+</li>
+</ul>
+<p>As we have seen in the previous chapter, Ferrite programs like <code>hello_client</code>
+interact with channel variables multiple times, with the session type of
+the channel changing every time after interaction. Under linear typing rules,
+we cannot make multiple copies of the channel, and we also cannot discard
+the channel until it is explicitly terminated.</p>
 <h2><a class="header" href="#intuitionistic-vs-classical-linear-logic" id="intuitionistic-vs-classical-linear-logic">Intuitionistic vs Classical Linear Logic</a></h2>
 <p>Since session types cover a family of programming languages, readers with
 some familiarity with session types may notice that Ferrite's implementation
-is quite different from some other session types implementations in
-<a href="https://github.com/Munksgaard/session-types">the</a>
-<a href="https://github.com/wenkokke/sesh">wild</a>.</p>
-<p>As a comparison, Ferrite's implementation of session types is based on
+is quite different from some other session types implementations in the wild,
+such as <a href="https://github.com/Munksgaard/session-types">session-types</a>
+and <a href="https://github.com/wenkokke/sesh">sesh</a>.</p>
+<p>Ferrite's implementation of session types is based on
 <em>intuitionistic</em> linear logic. This is in contrast with the <em>classical</em>
-linear logic formulation that some other session types implementations
-are based on.</p>
+linear logic formulation that is used by some other session types
+implementations.</p>
 <p>From the programmers' perspective, there are some key differences when
 using the intuitionistic formulation of session types in Ferrite.
-For example, you may notice that there is a lack of <em>dualization</em> in
-Ferrite. This means that the session type signature remain the
+For example, you may notice that there is no need for <em>dualization</em>
+in Ferrite. This means that the session type signature remain the
 same from the perspective of both the provider and the client.</p>
-<p>As we have seen in the <a href="01-getting-started/./03-communication.html">previous chapter</a>,
-while a provider sends a string value through a channel with
-the session type <code>SendValue &lt; String, End &gt;</code>, the client <em>receives</em>
-a value from a channel of the same session type. In comparison,
-in a classical formulation, the session type of the same
-channel for the client would instead have the session type
-<code>ReceiveValue &lt; String, End &gt;</code>.</p>
+<p>As illustrated in the <a href="01-getting-started/./03-communication.html">previous chapter</a>,
+while the provider <code>hello_provider</code> sends a string value through
+a channel with the session type <code>SendValue &lt; String, End &gt;</code>,
+the client <code>hello_client</code> <em>receives</em> a value from a channel of the
+same session type.</p>
+<p>In comparison, with classical formulation, we would instead
+have to explicitly dualize the session type. As a result,
+the session type of the channel given to <code>hello_client</code> would
+instead have the session type <code>ReceiveValue &lt; String, End &gt;</code>.</p>
+<p>Both intuitionistic and classical formulation of session types
+share the same foundation, viewed from different angles.
+From the perspective of a type theorist, it may be more
+convenient to formulate proofs with the help of dualization
+in the classical formulation.</p>
+<p>From the perspective of a programmer, it may be more intuitive to understand
+session types in the intuitionistic formulation. Intuitionistic session types
+have closer semantics with lambda calculus, and this makes it easier for
+programmers to bridge the concepts with their existing knowledge in
+functional programming.</p>
 <p>We leave it to informed readers to decide whether the intuitionistic formulation
 of Ferrite provides better intuition for programming in session types.
 For the purpose of this book, it is only important for us to clarify
@@ -721,10 +766,16 @@ Ferrite with other session types implementations.</p>
 <h2><a class="header" href="#learn-more" id="learn-more">Learn More</a></h2>
 <p>If you are interested to learn more about session types, there are
 a wealth of type theoretic resources available. To get started,
-we recommend watching the OPLSS lecture
-<a href="https://www.youtube.com/watch?v=xYhGY0Lq8cw&amp;list=PL0DsGHMPLUWWyBBTpnTBKsYxdkbIoy1q8">Session-Typed Concurrent Programming</a>
-given by Stephanie Balzer, our co-author for Ferrite.
-The research group <a href="http://groups.inf.ed.ac.uk/abcd/index.html">ABCD</a>
+we recommend the following learning materials by our co-author:</p>
+<ul>
+<li>
+<p>Tutorial slides - <a href="http://www.cs.cmu.edu/%7Ebalzers/publications/session_typed_concurrent_programming.pdf">Session-Typed Concurrent Programming</a></p>
+</li>
+<li>
+<p>OPLSS video lectures - <a href="https://www.youtube.com/watch?v=xYhGY0Lq8cw&amp;list=PL0DsGHMPLUWWyBBTpnTBKsYxdkbIoy1q8">Session-Typed Concurrent Programming</a></p>
+</li>
+</ul>
+<p>Other than that, the research group <a href="http://groups.inf.ed.ac.uk/abcd/index.html">ABCD</a>
 also publishes a comprehensive list of resources related to
 session types, including a list of
 <a href="http://groups.inf.ed.ac.uk/abcd/session-implementations.html">session types implementations</a>.</p>
