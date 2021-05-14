@@ -16,14 +16,14 @@ previous chapter:
 {{#include ../../code/src/hello_2.rs:hello_provider}}
 ```
 
-According to the `Hello` protocol, `SendValue < String, End >`,
+According to the `Hello` protocol, `SendValue<String, End>`,
 `hello_provider` is supposed to send a string value before terminating.
 But what if we implement `hello_provider` such that it terminates
 immediately without sending a string?
 
 
 ```rust
-let hello_provider_incorrect : Session < Hello > = terminate! ();
+let hello_provider_incorrect: Session<Hello> = terminate();
 ```
 
 In this case, if we try to compile our program, we would get a compile
@@ -31,14 +31,13 @@ error from Rust showing a message similar to as follows:
 
 ```
 error[E0308]: mismatched types
-  |
-  |   let hello_provider_incorrect : Session < Hello > =
-  |                        ----------------- expected due to this
-  |     terminate! ();
-  |     ^^^^^^^^^^^^^ expected struct `SendValue`, found struct `End`
-  |
-   = note: expected struct `PartialSession < (), SendValue < String, End > >`
-              found struct `PartialSession < _, End >`
+ |   let hello_provider_incorrect: Session<Hello> = terminate();
+ |                                 --------------   ^^^^^^^^^^^ expected struct `ferrite_session::prelude::SendValue`, found struct `ferrite_session::prelude::End`
+ |                                 |
+ |                                 expected due to this
+ |
+ = note: expected struct `PartialSession<(), ferrite_session::prelude::SendValue<String, ferrite_session::prelude::End>>`
+            found struct `PartialSession<_, ferrite_session::prelude::End>`
 ```
 
 The error message above has been slightly prettified to make it more readable,
@@ -69,38 +68,42 @@ to receive a `Hello` channel, ignores the channel, and proceed to terminate
 immediately. So let's try implementing a new client to do just that:
 
 ```rust
-let hello_client_incorrect :
-  Session <
-    ReceiveChannel < Hello, End >
-  > =
-  receive_channel! ( provider => {
-    terminate! ()
+let hello_client_incorrect: Session<ReceiveChannel<Hello, End>> =
+  receive_channel(|provider| {
+    terminate()
   });
 ```
 
 In `hello_client_incorrect`, the `provider` channel is ignored after we have received
-it, and we proceed to call `terminate!` immediately. If we try to build this,
+it, and we proceed to call `terminate` immediately. If we try to build this,
 we would instead get the following compile error:
 
 ```
-error[E0277]: the trait bound `( SendValue < String, End >, () ): EmptyContext` is not satisfied
-  |
-  |  terminate! ()
-  |  ^^^^^^^^^^^^^ the trait `EmptyContext` is not implemented for `( SendValue < String, End >, () )`
+error[E0277]: the trait bound `(ferrite_session::prelude::SendValue<String, ferrite_session::prelude::End>, ()): ferrite_session::internal::base::EmptyContext` is not satisfied
+ |
+ |     terminate()
+ |     ^^^^^^^^^ the trait `ferrite_session::internal::base::EmptyContext` is not implemented for `(ferrite_session::prelude::SendValue<String, ferrite_session::prelude::End>, ())`
+ |
+ |
+ |   C: EmptyContext,
+ |      ------------ required by this bound in `ferrite_session::prelude::terminate`
+ |
+ = help: the following implementations were found:
+           <(ferrite_session::prelude::Empty, R) as ferrite_session::internal::base::EmptyContext>
 ```
 
 The error can look a bit scary, but it mainly boils down to two constructs:
-a new type `( SendValue < String, End >, () )` and a new trait `EmptyContext`.
+a new type `(SendValue<String, End>, ())` and a new trait `EmptyContext`.
 
-The type `( SendValue < String, End >, () )` represents the _linear context_ in
-`hello_client_incorrect`, when the expression `terminate!()` is called. We will
+The type `(SendValue < String, End >, ())` represents the _linear context_ in
+`hello_client_incorrect`, when the expression `terminate()` is called. We will
 cover the details of linear context in a
 [later chapter](../03-main-concepts/02-linear-context.md). For now it is sufficient
 to know that it is used to track the `provider` channel we have just received,
-and it has the session type `SendValue < String, End >`.
+and it has the session type `SendValue<String, End>`.
 
 The `EmptyContext` trait is essentially telling us that in order to use the
-`terminate!()` construct, the current linear context must be empty.
+`terminate()` construct, the current linear context must be empty.
 However because we have not yet used up the `provider` channel, the
 linear context is thus not empty, and so we cannot terminate just yet.
 
@@ -116,7 +119,7 @@ of Rust objects. Consider an equivalent of `hello_client` implemented
 using [Rust channels](https://doc.rust-lang.org/std/sync/mpsc/fn.channel.html):
 
 ```rust
-fn hello_client_rust ( receiver: Receiver < String > ) {
+fn hello_client_rust(receiver: Receiver<String>) {
   // drops receiver immediately
 }
 ```
@@ -131,7 +134,7 @@ In the simple case of our `Hello` protocol, the dropping of a channel
 might not seem critical. But what if the protocol is slightly more complicated?
 
 Let's say we have an `Ping` protocol with the session type
-`ReceiveValue < String, SendValue < String, End > >`. This would require the
+`ReceiveValue<String, SendValue<String, End>>`. This would require the
 provider to receive a string value before sending back another string value,
 and vice versa for the client. If a client drops the channel without
 sending a value to the provider, the provider would potentially wait forever

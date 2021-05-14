@@ -8,7 +8,6 @@
   - [Client Communication](./01-getting-started/03-communication.md)
   - [Type Errors](./01-getting-started/04-type-errors.md)
   - [Session Types](./01-getting-started/05-session-types.md)
-  - [Macros](./01-getting-started/06-macros.md)
 
 - [Main Concepts]()
   - [Protocols]()

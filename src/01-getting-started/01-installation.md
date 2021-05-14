@@ -8,22 +8,23 @@ crate `ferrite-session`.
 To start using Ferrite, simply
 [create a new Cargo project](https://doc.rust-lang.org/book/ch01-03-hello-cargo.html)
 and add `ferrite-session` as a dependency in `Cargo.toml`.
-To help with defining asynchronous Rust programs, we also recommend
-adding [async-std](https://docs.rs/async-std/) as a dependency in your Rust project.
+Ferrite uses [tokio](https://docs.rs/async-std/) to spawn async tasks, so you should
+add that as a dependency as well.
 
 ```
 [dependencies]
-...
-ferrite-session = "0.1.0"
-async-std = { version = "1.7.0", features = ["attributes"] }
+ferrite-session = "0.1.3"
+tokio = { version = "1.5.0" }
 ...
 ```
 
-To use the constructs provided by Ferrite, import everything from the
-`ferrite_session` module:
+To use the constructs provided by Ferrite, import everything from the `ferrite_session::prelude` module. You'd also need to provide a `tokio` runtime for Ferrite to spawn its async tasks. This can be done by adding the `#[tokio::main]` attribute to your main function.
 
 ```rust
-use ferrite_session::*;
+use ferrite_session::prelude::*;
+
+#[tokio::main]
+async fn main() { ... }
 ```
 
 Next, we will learn how to use Ferrite to write a simple hello world program.

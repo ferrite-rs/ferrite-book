@@ -13,24 +13,21 @@ protocol, and then link it with `hello_provider`.
 First, we define `hello_client` to have the following type:
 
 ```rust
-let hello_client :
-  Session <
-    ReceiveChannel < Hello, End >
-  > = ...
+let hello_client: Session<ReceiveChannel<Hello, End>> = ...
 ```
 
-Our `hello_client` has the Rust type `Session < ReceiveChannel < Hello, End > >`,
+Our `hello_client` has the Rust type `Session<ReceiveChannel<Hello, End>>`,
 indicating that it is a Ferrite program offering the session type
-`ReceiveChannel < Hello, End >`. Here we encounter a new session type in the form
-`ReceiveChannel < A, B >`, which is used to _receive a channel_ of session type
+`ReceiveChannel<Hello, End>`. Here we encounter a new session type in the form
+`ReceiveChannel<A, B>`, which is used to _receive a channel_ of session type
 `A` offered by some provider, and then continue offering session type `B`.
 
 ## Channels
 
 Ferrite allows sending and receiving of _channels_, which represent the client
 end point to communicate with a provider that offers the channel's session type.
-At high level, we can think of receiving a channel using `ReceiveChannel < A, B >`
-is similar to plain Rust functions with function traits like `FnOnce (A) -> B`.
+At high level, we can think of receiving a channel using `ReceiveChannel<A, B>`
+is similar to plain Rust functions with function traits like `FnOnce(A) -> B`.
 In other words, `ReceiveChannel` is the equivalent of function types in Ferrite.
 
 There is however one important distinction of `ReceiveChannel` from regular
@@ -41,7 +38,7 @@ important, and why bare Rust code is not sufficient to support linearity.
 
 
 Now back to our `hello_client` example. The session type
-`ReceiveChannel < Hello, End >` indicates that `hello_client` is _receiving_
+`ReceiveChannel<Hello, End>` indicates that `hello_client` is _receiving_
 a channel of session type `Hello`, and then terminates with `End`.
 To implement such a session type, we can implement `hello_client` as follows:
 
@@ -51,16 +48,14 @@ To implement such a session type, we can implement `hello_client` as follows:
 
 Our `hello_client` body looks slightly more complicated than `hello_provider`.
 To understand what's going on, we will go through each line of
-`hello_client`'s body. Starting with `receive_channel!`:
+`hello_client`'s body. Starting with `receive_channel`:
 
 ```rust
-receive_channel! ( provider => {
-  ...
-})
+receive_channel(|provider| { ... })
 ```
 
-To match the final session type `ReceiveChannel < Hello, End >` that is
-offered by `hello_client`, we use `receive_channel!` to receive a
+To match the final session type `ReceiveChannel<Hello, End>` that is
+offered by `hello_client`, we use `receive_channel` to receive a
 channel of session type `Hello`, and then binds it to the _channel variable_
 `provider`. This is similar to a Rust function accepting an argument
 and bind it to a variable.
@@ -72,25 +67,25 @@ terminate `hello_client` just yet, because the channel variable `provider`
 is _linear_, and we must fully consume it before we can terminate.
 
 Recall that `Hello` is a type alias, so the actual session type of
-the channel variable `provider` is `SendValue < String, End >`.
+the channel variable `provider` is `SendValue<String, End>`.
 But instead of having to offer that, we are acting as the _client_
-to consume the session type `SendValue < String, End >`. Since the provider
+to consume the session type `SendValue<String, End>`. Since the provider
 is expected to send a `String` value, as a client we are expected to
 _receive_ a `String` value from the provider. We can do that using
-`receive_value_from!`:
+`receive_value_from`:
 
 ```rust
-receive_value_from! ( provider, greeting => {
-  println! ( "Received greetings from provider: {}", greeting );
+receive_value_from(provider, move |greeting| {
+  println!("Received greetings from provider: {}", greeting);
   ...
 })
 ```
 
-We use `receive_value_from!` to receive a value sent from the `provider`
+We use `receive_value_from` to receive a value sent from the `provider`
 channel, and then bind the received `String` value to the Rust variable
 `greeting`. We then print out the value of `greeting` using `println!`.
 Following that, in the continuation `...`, the session type
-of `provider` _changes_ from `SendValue < String, End >` to
+of `provider` _changes_ from `SendValue<String, End>` to
 become `End`.
 
 Unlike regular Rust variables, each time we interacts with a channel
@@ -99,21 +94,21 @@ to its continuation session type. Since Ferrite channels are linear,
 we have to continuously interact with the channel until it is
 fully terminated.
 
-After calling `receive_value_from!`, we have the channel variable
+After calling `receive_value_from`, we have the channel variable
 `provider` with session type `End`, and we need to offer the session
 type `End` by terminating. But we can't terminate just yet, because
 `End` simply indicates that the provider will eventually terminates,
 but may not yet been terminated. Hence we would first have to wait
-for `provider` to terminate using `wait!`:
+for `provider` to terminate using `wait`:
 
 ```rust
-wait! ( provider, terminate! () )
+wait(provider, terminate())
 ```
 
-We use `wait!` to wait for the provider on the other side of a
+We use `wait` to wait for the provider on the other side of a
 channel to terminate. After that, the `provider` channel is discarded,
 and we don't have anymore unused channel variable. With that, we
-can finally terminate our program using `terminate!()`.
+can finally terminate our program using `terminate()`.
 
 ## Linking Provider With Client
 
@@ -131,7 +126,7 @@ using `apply_channel`:
 ```
 
 The `apply_channel` construct is provided by Ferrite to link a
-client Ferrite program of session type `ReceiveChannel < A, B >`
+client Ferrite program of session type `ReceiveChannel<A, B>`
 with a provider Ferrite program of session type `A`,
 resulting in a new Ferrite program of session type `B`
 as the result.
