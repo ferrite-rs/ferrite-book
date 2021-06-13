@@ -57,17 +57,17 @@ receive_channel(|provider| { ... })
 To match the final session type `ReceiveChannel<Hello, End>` that is
 offered by `hello_client`, we use `receive_channel` to receive a
 channel of session type `Hello`, and then binds it to the _channel variable_
-`provider`. This is similar to a Rust function accepting an argument
+`a`. This is similar to a Rust function accepting an argument
 and bind it to a variable.
 
 Inside the continuation `...`, since we have received the `Hello` channel
 already, we will continue to offer the session type `End`.  To do that,
 we just need to eventually terminate `hello_client`. However we cannot
-terminate `hello_client` just yet, because the channel variable `provider`
+terminate `hello_client` just yet, because the channel variable `a`
 is _linear_, and we must fully consume it before we can terminate.
 
 Recall that `Hello` is a type alias, so the actual session type of
-the channel variable `provider` is `SendValue<String, End>`.
+the channel variable `a` is `SendValue<String, End>`.
 But instead of having to offer that, we are acting as the _client_
 to consume the session type `SendValue<String, End>`. Since the provider
 is expected to send a `String` value, as a client we are expected to
@@ -81,11 +81,11 @@ receive_value_from(provider, move |greeting| {
 })
 ```
 
-We use `receive_value_from` to receive a value sent from the `provider`
+We use `receive_value_from` to receive a value sent from the `a`
 channel, and then bind the received `String` value to the Rust variable
 `greeting`. We then print out the value of `greeting` using `println!`.
 Following that, in the continuation `...`, the session type
-of `provider` _changes_ from `SendValue<String, End>` to
+of `a` _changes_ from `SendValue<String, End>` to
 become `End`.
 
 Unlike regular Rust variables, each time we interacts with a channel
@@ -95,18 +95,18 @@ we have to continuously interact with the channel until it is
 fully terminated.
 
 After calling `receive_value_from`, we have the channel variable
-`provider` with session type `End`, and we need to offer the session
+`a` with session type `End`, and we need to offer the session
 type `End` by terminating. But we can't terminate just yet, because
 `End` simply indicates that the provider will eventually terminates,
 but may not yet been terminated. Hence we would first have to wait
-for `provider` to terminate using `wait`:
+for `a` to terminate using `wait`:
 
 ```rust
 wait(provider, terminate())
 ```
 
 We use `wait` to wait for the provider on the other side of a
-channel to terminate. After that, the `provider` channel is discarded,
+channel to terminate. After that, the `a` channel is discarded,
 and we don't have anymore unused channel variable. With that, we
 can finally terminate our program using `terminate()`.
 

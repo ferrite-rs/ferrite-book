@@ -16,10 +16,10 @@ let hello_provider: Session<Hello> =
 
 // ANCHOR: hello_client
 let hello_client: Session<ReceiveChannel<Hello, End>> =
-  receive_channel(|provider| {
-    receive_value_from(provider, move |greeting| {
+  receive_channel(|a| {
+    receive_value_from(a, move |greeting| {
       println!("Received greetings from provider: {}", greeting);
-      wait(provider, terminate())
+      wait(a, terminate())
     })
   });
 // ANCHOR_END: hello_client

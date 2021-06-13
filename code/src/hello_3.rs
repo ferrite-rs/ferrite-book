@@ -12,10 +12,10 @@ async fn main()
     send_value("Hello World!".to_string(), terminate());
 
   let hello_client: Session<ReceiveChannel<Hello, End>> =
-    receive_channel(move |provider| {
-      receive_value_from(provider, move |greeting| {
+    receive_channel(move |a| {
+      receive_value_from(a, move |greeting| {
         println!("Received greetings from provider: {}", greeting);
-        wait(provider, terminate())
+        wait(a, terminate())
       })
     });
 
