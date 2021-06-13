@@ -362,10 +362,10 @@ To implement such a session type, we can implement <code>hello_client</code> as 
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let hello_client: Session&lt;ReceiveChannel&lt;Hello, End&gt;&gt; =
-  receive_channel(|provider| {
-    receive_value_from(provider, move |greeting| {
+  receive_channel(|a| {
+    receive_value_from(a, move |greeting| {
       println!(&quot;Received greetings from provider: {}&quot;, greeting);
-      wait(provider, terminate())
+      wait(a, terminate())
     })
   });
 <span class="boring">}
@@ -382,15 +382,15 @@ To understand what's going on, we will go through each line of
 <p>To match the final session type <code>ReceiveChannel&lt;Hello, End&gt;</code> that is
 offered by <code>hello_client</code>, we use <code>receive_channel</code> to receive a
 channel of session type <code>Hello</code>, and then binds it to the <em>channel variable</em>
-<code>provider</code>. This is similar to a Rust function accepting an argument
+<code>a</code>. This is similar to a Rust function accepting an argument
 and bind it to a variable.</p>
 <p>Inside the continuation <code>...</code>, since we have received the <code>Hello</code> channel
 already, we will continue to offer the session type <code>End</code>.  To do that,
 we just need to eventually terminate <code>hello_client</code>. However we cannot
-terminate <code>hello_client</code> just yet, because the channel variable <code>provider</code>
+terminate <code>hello_client</code> just yet, because the channel variable <code>a</code>
 is <em>linear</em>, and we must fully consume it before we can terminate.</p>
 <p>Recall that <code>Hello</code> is a type alias, so the actual session type of
-the channel variable <code>provider</code> is <code>SendValue&lt;String, End&gt;</code>.
+the channel variable <code>a</code> is <code>SendValue&lt;String, End&gt;</code>.
 But instead of having to offer that, we are acting as the <em>client</em>
 to consume the session type <code>SendValue&lt;String, End&gt;</code>. Since the provider
 is expected to send a <code>String</code> value, as a client we are expected to
@@ -405,11 +405,11 @@ is expected to send a <code>String</code> value, as a client we are expected to
 })
 <span class="boring">}
 </span></code></pre></pre>
-<p>We use <code>receive_value_from</code> to receive a value sent from the <code>provider</code>
+<p>We use <code>receive_value_from</code> to receive a value sent from the <code>a</code>
 channel, and then bind the received <code>String</code> value to the Rust variable
 <code>greeting</code>. We then print out the value of <code>greeting</code> using <code>println!</code>.
 Following that, in the continuation <code>...</code>, the session type
-of <code>provider</code> <em>changes</em> from <code>SendValue&lt;String, End&gt;</code> to
+of <code>a</code> <em>changes</em> from <code>SendValue&lt;String, End&gt;</code> to
 become <code>End</code>.</p>
 <p>Unlike regular Rust variables, each time we interacts with a channel
 variable, the session type of the channel variable is <em>updated</em>
@@ -417,11 +417,11 @@ to its continuation session type. Since Ferrite channels are linear,
 we have to continuously interact with the channel until it is
 fully terminated.</p>
 <p>After calling <code>receive_value_from</code>, we have the channel variable
-<code>provider</code> with session type <code>End</code>, and we need to offer the session
+<code>a</code> with session type <code>End</code>, and we need to offer the session
 type <code>End</code> by terminating. But we can't terminate just yet, because
 <code>End</code> simply indicates that the provider will eventually terminates,
 but may not yet been terminated. Hence we would first have to wait
-for <code>provider</code> to terminate using <code>wait</code>:</p>
+for <code>a</code> to terminate using <code>wait</code>:</p>
 <pre><pre class="playground"><code class="language-rust edition2018">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -429,7 +429,7 @@ for <code>provider</code> to terminate using <code>wait</code>:</p>
 <span class="boring">}
 </span></code></pre></pre>
 <p>We use <code>wait</code> to wait for the provider on the other side of a
-channel to terminate. After that, the <code>provider</code> channel is discarded,
+channel to terminate. After that, the <code>a</code> channel is discarded,
 and we don't have anymore unused channel variable. With that, we
 can finally terminate our program using <code>terminate()</code>.</p>
 <h2><a class="header" href="#linking-provider-with-client" id="linking-provider-with-client">Linking Provider With Client</a></h2>
@@ -488,10 +488,10 @@ let hello_provider: Session&lt;Hello&gt; =
   send_value(&quot;Hello World!&quot;.to_string(), terminate());
 
 let hello_client: Session&lt;ReceiveChannel&lt;Hello, End&gt;&gt; =
-  receive_channel(|provider| {
-    receive_value_from(provider, move |greeting| {
+  receive_channel(|a| {
+    receive_value_from(a, move |greeting| {
       println!(&quot;Received greetings from provider: {}&quot;, greeting);
-      wait(provider, terminate())
+      wait(a, terminate())
     })
   });
 
@@ -556,10 +556,10 @@ and one that offers the session type <code>End</code>.</p>
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let hello_client: Session&lt;ReceiveChannel&lt;Hello, End&gt;&gt; =
-  receive_channel(|provider| {
-    receive_value_from(provider, move |greeting| {
+  receive_channel(|a| {
+    receive_value_from(a, move |greeting| {
       println!(&quot;Received greetings from provider: {}&quot;, greeting);
-      wait(provider, terminate())
+      wait(a, terminate())
     })
   });
 <span class="boring">}
@@ -797,6 +797,112 @@ an <code>i32</code> value, then sends a <code>bool</code> value, before finally 
 <tr><td><a href="02-main-concepts/../04-advanced-constructs/01-recursive-session-types.html"><code>Rec&lt;F&gt;</code></a></td><td>Recursive session type, with <code>F</code> being a session type containing recursion markers such as <code>Z</code>.</td></tr>
 </tbody></table>
 <h1><a class="header" href="#linear-context" id="linear-context">Linear Context</a></h1>
+<p>A Ferrite program offers exactly one protocol, as denoted by the type <code>Session&lt;A&gt;</code>, with
+<code>A</code> being the provided protocol. For example, when we define our
+<a href="02-main-concepts/../01-getting-started/02-hello-world.html"><code>hello_provider</code></a> program
+that offers <code>SendValue&lt;String, End&gt;</code>, the type of the program is <code>Session&lt;SendValue&lt;String, End&gt;&gt;</code>.
+When we implement <code>hello_provider</code> as <code>send_value(&quot;Hello World!&quot;.to_string(), terminate())</code>,
+we are implicitly sending the string value <code>&quot;Hello World!&quot;</code> to the <em>offered</em> channel
+of the protocol <code>SendValue&lt;String, End&gt;</code>.</p>
+<p>Although a Ferrite program can only have one offered channel, it can also interact with
+other Ferrite programs and act as the <em>client</em> of the offered channels. Since there
+can be more than one client channels available, we need to identify the different
+channels available using <em>channel variables</em>.
+So in the case of <a href="02-main-concepts/../01-getting-started/03-communication.html"><code>hello_client</code></a>,
+we bind the channel variable <code>a</code> to the client channel of protocol
+<code>SendValue&lt;String, End&gt;</code>, so that it can <em>receive</em> a string value from the provider.</p>
+<pre><pre class="playground"><code class="language-rust edition2018">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hello_client: Session&lt;ReceiveChannel&lt;Hello, End&gt;&gt; =
+  receive_channel(|a| {
+    receive_value_from(a, move |greeting| {
+      println!(&quot;Received greetings from provider: {}&quot;, greeting);
+      wait(a, terminate())
+    })
+  });
+<span class="boring">}
+</span></code></pre></pre>
+<h2><a class="header" href="#type-level-list" id="type-level-list">Type Level List</a></h2>
+<p>Ferrite tracks the linear usage of channel variables in a <em>linear context</em>.
+A linear context is encoded as a Rust type containing zero or more protocols,
+in the form of a <em>type level list</em>. We can use the <code>HList!</code> macro to define
+a list of Rust types. For example:</p>
+<ul>
+<li><code>HList![]</code> is an <em>empty</em> type level list.</li>
+<li><code>HList![String]</code> is a type level list with just one element, <code>String</code>.</li>
+<li><code>HList![String, i32, bool]</code> is a type level list containing 3 Rust types: <code>String</code>, <code>i32</code>, and <code>bool</code>.</li>
+<li><code>HList![SendValue&lt;String, End&gt;, ReceiveValue&lt;i32, End&gt;, End]</code> is a type level list containing 3
+Ferrite protocols: <code>SendValue&lt;String, End&gt;</code>, <code>ReceiveValue&lt;i32, End&gt;</code>, and <code>End</code>.</li>
+</ul>
+<p>Behind the scene, the <code>HList!</code> macro desugars a type level list into nested tuples
+of the form <code>(A0, (A1, (A2, (..., (An, ())))))</code>. This is similar to how linked lists
+are constructed in Lisp. We start by treating the unit type <code>()</code> as the empty list.
+To prepend an element <code>A</code> to the front of another list <code>R</code>, we use the tuple constructor
+<code>(,)</code> to form the new list <code>(A, R)</code>, with <code>A</code> being the <em>head</em> of the list and <code>R</code>
+being the <em>tail</em> of the list. So for example:</p>
+<ul>
+<li><code>HList![]</code> desugars to <code>()</code>.</li>
+<li><code>HList![String]</code> desugars to <code>(String, ())</code>.</li>
+<li><code>HList![String, i32, bool]</code> desugars to <code>(String, (i32, (bool, ())))</code>.</li>
+<li><code>HList![SendValue&lt;String, End&gt;, ReceiveValue&lt;i32, End&gt;, End]</code> desugars to
+<code>(SendValue&lt;String, End&gt;, (ReceiveValue&lt;i32, End&gt;, (End, ())))</code>.</li>
+</ul>
+<p>When we encounter compile errors while writing Ferrite programs, we can often
+see desugared type level lists shown in the error messages. To understand the
+error messages, we just need to recognize the patterns and think of them
+as being the same as the pretty printed <code>HList![...]</code> elements.</p>
+<h2><a class="header" href="#the-context-trait" id="the-context-trait">The <code>Context</code> trait</a></h2>
+<p>Ferrite requires linear contexts to implement the <code>Context</code> trait. This is
+automatically implemented for a type level list, if all its elements implement
+the <code>Protocol</code> trait. So for example:</p>
+<ul>
+<li><code>HList![]</code> is a valid linear context, and it is an <em>empty</em> context.</li>
+<li><code>HList![SendValue&lt;String, End&gt;]</code> is a linear context with one protocol, <code>SendValue&lt;String, End&gt;</code>.</li>
+<li><code>HList![SendValue&lt;String, End&gt;, ReceiveValue&lt;i32, End&gt;, End]</code> is a linear context,
+because all 3 elements are valid Ferrite protocols.</li>
+<li><code>HList![String, i32, bool]</code> is not a linear context, because none of them are valid
+Ferrite protocols.</li>
+<li><code>HList![SendValue&lt;String, End&gt;, String]</code> is not a linear context, because the
+second element <code>String</code> is not a Ferrite protocol.</li>
+<li><code>HList![SendValue&lt;String, End&gt;, ReceiveValue&lt;i32, i32&gt;]</code> is not a linear context,
+because the second element <code>ReceiveValue&lt;i32, i32&gt;</code> is not a valid Ferrite protocol.</li>
+</ul>
+<p>All Ferrite program has an associated linear context, and a program usually starts with an
+empty linear context <code>HList![]</code>. For the case of <code>hello_client</code>,
+in the beginning it also starts with the empty context. When we use <code>receive_channel</code>
+inside <code>hello_client</code>, a new channel is then added to the linear context in the continuation.
+As a result, the linear context in the continuation after <code>receive_channel</code> becomes
+<code>HList![SendValue&lt;String, End&gt;]</code>, with the channel variable <code>a</code> referring to the first
+channel <code>SendValue&lt;String, End&gt;</code>.</p>
+<h2><a class="header" href="#empty-slots" id="empty-slots">Empty Slots</a></h2>
+<p>When a Ferrite program has a non-empty linear context, it would have to fully
+consume all linear channels before it can finally terminate. For the case
+of <code>hello_client</code>, this would mean that the linear context <code>HList![SendValue&lt;String, End&gt;]</code>
+has to be fully consumed. We do that by first receiving the value using
+<code>receive_value_from(a, ...)</code>. In the continuation, the linear context would be
+updated to become <code>HList![End]</code> after the value is received. At this point
+we would then wait for the channel to terminate using <code>wait(a, ...)</code>.</p>
+<p>After the channel <code>a</code> is terminated, the original position of the channel
+in the linear context is updated with a special <em>empty slot</em> called <code>Empty</code>.
+This is used to indicate that the channel has been fully consumed, and
+it may be safe for the program to terminate. So in the continuation
+after <code>wait(a, ...)</code>, the linear context is updated to become <code>HList![Empty]</code>.</p>
+<p>Compared to <code>End</code>, <code>Empty</code> is not a protocol. So we cannot for example define a
+Ferrite program  that offers <code>Empty</code>. However <code>Empty</code> is treated as a valid
+element in a linear context. So a type level list like
+<code>HList![Empty, SendValue&lt;String, End&gt;]</code> also implements <code>Context</code>.</p>
+<h2><a class="header" href="#empty-context" id="empty-context">Empty Context</a></h2>
+<p>When we call <code>terminate()</code>, Ferrite checks whether a linear context is empty
+using the <code>EmptyContext</code> trait. This trait is implemented if the linear context
+is an empty list <code>HList![]</code>, or if all elements in the linear context is <code>Empty</code>.
+So <code>HList![]</code>, <code>HList![Empty]</code>, <code>HList![Empty, Empty]</code>, and so on all implement
+<code>EmptyContext</code>.</p>
+<p>When we try to call <code>terminate()</code> with a non-empty linear context,
+we will get a compile error stating that the type <code>HList![...]</code> does not
+implement <code>EmptyContext</code>. When encountering such error, we can inspect
+the list and see which element is not empty, and update our Ferrite
+program to fully consume the channel accordingly.</p>
 <h1><a class="header" href="#sessions" id="sessions">Sessions</a></h1>
 <h1><a class="header" href="#channel-selectors" id="channel-selectors">Channel Selectors</a></h1>
 <h1><a class="header" href="#basic-constructs" id="basic-constructs">Basic Constructs</a></h1>

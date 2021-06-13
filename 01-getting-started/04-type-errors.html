@@ -214,10 +214,10 @@ and one that offers the session type <code>End</code>.</p>
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let hello_client: Session&lt;ReceiveChannel&lt;Hello, End&gt;&gt; =
-  receive_channel(|provider| {
-    receive_value_from(provider, move |greeting| {
+  receive_channel(|a| {
+    receive_value_from(a, move |greeting| {
       println!(&quot;Received greetings from provider: {}&quot;, greeting);
-      wait(provider, terminate())
+      wait(a, terminate())
     })
   });
 <span class="boring">}

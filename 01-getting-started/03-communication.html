@@ -199,10 +199,10 @@ To implement such a session type, we can implement <code>hello_client</code> as 
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let hello_client: Session&lt;ReceiveChannel&lt;Hello, End&gt;&gt; =
-  receive_channel(|provider| {
-    receive_value_from(provider, move |greeting| {
+  receive_channel(|a| {
+    receive_value_from(a, move |greeting| {
       println!(&quot;Received greetings from provider: {}&quot;, greeting);
-      wait(provider, terminate())
+      wait(a, terminate())
     })
   });
 <span class="boring">}
@@ -219,15 +219,15 @@ To understand what's going on, we will go through each line of
 <p>To match the final session type <code>ReceiveChannel&lt;Hello, End&gt;</code> that is
 offered by <code>hello_client</code>, we use <code>receive_channel</code> to receive a
 channel of session type <code>Hello</code>, and then binds it to the <em>channel variable</em>
-<code>provider</code>. This is similar to a Rust function accepting an argument
+<code>a</code>. This is similar to a Rust function accepting an argument
 and bind it to a variable.</p>
 <p>Inside the continuation <code>...</code>, since we have received the <code>Hello</code> channel
 already, we will continue to offer the session type <code>End</code>.  To do that,
 we just need to eventually terminate <code>hello_client</code>. However we cannot
-terminate <code>hello_client</code> just yet, because the channel variable <code>provider</code>
+terminate <code>hello_client</code> just yet, because the channel variable <code>a</code>
 is <em>linear</em>, and we must fully consume it before we can terminate.</p>
 <p>Recall that <code>Hello</code> is a type alias, so the actual session type of
-the channel variable <code>provider</code> is <code>SendValue&lt;String, End&gt;</code>.
+the channel variable <code>a</code> is <code>SendValue&lt;String, End&gt;</code>.
 But instead of having to offer that, we are acting as the <em>client</em>
 to consume the session type <code>SendValue&lt;String, End&gt;</code>. Since the provider
 is expected to send a <code>String</code> value, as a client we are expected to
@@ -242,11 +242,11 @@ is expected to send a <code>String</code> value, as a client we are expected to
 })
 <span class="boring">}
 </span></code></pre></pre>
-<p>We use <code>receive_value_from</code> to receive a value sent from the <code>provider</code>
+<p>We use <code>receive_value_from</code> to receive a value sent from the <code>a</code>
 channel, and then bind the received <code>String</code> value to the Rust variable
 <code>greeting</code>. We then print out the value of <code>greeting</code> using <code>println!</code>.
 Following that, in the continuation <code>...</code>, the session type
-of <code>provider</code> <em>changes</em> from <code>SendValue&lt;String, End&gt;</code> to
+of <code>a</code> <em>changes</em> from <code>SendValue&lt;String, End&gt;</code> to
 become <code>End</code>.</p>
 <p>Unlike regular Rust variables, each time we interacts with a channel
 variable, the session type of the channel variable is <em>updated</em>
@@ -254,11 +254,11 @@ to its continuation session type. Since Ferrite channels are linear,
 we have to continuously interact with the channel until it is
 fully terminated.</p>
 <p>After calling <code>receive_value_from</code>, we have the channel variable
-<code>provider</code> with session type <code>End</code>, and we need to offer the session
+<code>a</code> with session type <code>End</code>, and we need to offer the session
 type <code>End</code> by terminating. But we can't terminate just yet, because
 <code>End</code> simply indicates that the provider will eventually terminates,
 but may not yet been terminated. Hence we would first have to wait
-for <code>provider</code> to terminate using <code>wait</code>:</p>
+for <code>a</code> to terminate using <code>wait</code>:</p>
 <pre><pre class="playground"><code class="language-rust edition2018">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -266,7 +266,7 @@ for <code>provider</code> to terminate using <code>wait</code>:</p>
 <span class="boring">}
 </span></code></pre></pre>
 <p>We use <code>wait</code> to wait for the provider on the other side of a
-channel to terminate. After that, the <code>provider</code> channel is discarded,
+channel to terminate. After that, the <code>a</code> channel is discarded,
 and we don't have anymore unused channel variable. With that, we
 can finally terminate our program using <code>terminate()</code>.</p>
 <h2><a class="header" href="#linking-provider-with-client" id="linking-provider-with-client">Linking Provider With Client</a></h2>
@@ -325,10 +325,10 @@ let hello_provider: Session&lt;Hello&gt; =
   send_value(&quot;Hello World!&quot;.to_string(), terminate());
 
 let hello_client: Session&lt;ReceiveChannel&lt;Hello, End&gt;&gt; =
-  receive_channel(|provider| {
-    receive_value_from(provider, move |greeting| {
+  receive_channel(|a| {
+    receive_value_from(a, move |greeting| {
       println!(&quot;Received greetings from provider: {}&quot;, greeting);
-      wait(provider, terminate())
+      wait(a, terminate())
     })
   });
 
