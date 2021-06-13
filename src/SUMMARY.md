@@ -14,6 +14,7 @@
   - [Linear Context](./02-main-concepts/02-linear-context.md)
   - [Sessions](./02-main-concepts/03-sessions.md)
   - [Channel Selectors](./02-main-concepts/04-channel-selectors.md)
+  - [Hole Driven Development](./02-main-concepts/05-hole-driven-development.md)
 
 - [Basic Constructs](./03-basic-constructs/00-basic-constructs.md)
   - [Termination](./03-basic-constructs/01-termination.md)
