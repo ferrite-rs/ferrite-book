@@ -95,7 +95,7 @@ error[E0277]: the trait bound `(ferrite_session::prelude::SendValue<String, ferr
 The error can look a bit scary, but it mainly boils down to two constructs:
 a new type `(SendValue<String, End>, ())` and a new trait `EmptyContext`.
 
-The type `(SendValue < String, End >, ())` represents the _linear context_ in
+The type `(SendValue<String, End>, ())` represents the _linear context_ in
 `hello_client_incorrect`, when the expression `terminate()` is called. We will
 cover the details of linear context in a
 [later chapter](../03-main-concepts/02-linear-context.md). For now it is sufficient

@@ -13,8 +13,8 @@ add that as a dependency as well.
 
 ```
 [dependencies]
-ferrite-session = "0.1.3"
-tokio = { version = "1.5.0" }
+tokio = "1.6.1"
+ferrite-session = "0.1.4"
 ...
 ```
 

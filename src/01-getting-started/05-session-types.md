@@ -86,14 +86,14 @@ same from the perspective of both the provider and the client.
 
 As illustrated in the [previous chapter](./03-communication.md),
 while the provider `hello_provider` sends a string value through
-a channel with the session type `SendValue < String, End >`,
+a channel with the session type `SendValue<String, End>`,
 the client `hello_client` _receives_ a value from a channel of the
 same session type.
 
 In comparison, with classical formulation, we would instead
 have to explicitly dualize the session type. As a result,
 the session type of the channel given to `hello_client` would
-instead have the session type `ReceiveValue < String, End >`.
+instead have the session type `ReceiveValue<String, End>`.
 
 Both intuitionistic and classical formulation of session types
 share the same foundation, viewed from different angles.
