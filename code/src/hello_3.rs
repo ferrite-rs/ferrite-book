@@ -1,32 +1,57 @@
 #![allow(dead_code)]
+#![allow(unreachable_code)]
+#![allow(unused_variables)]
+#![allow(clippy::diverging_sub_expression)]
 
 use ferrite_session::prelude::*;
 
-type Hello = SendValue<String, End>;
-
-// ANCHOR: hello_3
 #[tokio::main]
 async fn main()
 {
-  let hello_provider: Session<Hello> =
-    send_value("Hello World!".to_string(), terminate());
+  {
+    // ANCHOR: hello_hole_1
+    let hello_provider: Session<SendValue<String, End>> = todo!() as _;
+    // ANCHOR_END: hello_hole_1
+  }
 
-  let hello_client: Session<ReceiveChannel<Hello, End>> =
-    receive_channel(move |a| {
-      receive_value_from(a, move |greeting| {
-        println!("Received greetings from provider: {}", greeting);
-        wait(a, terminate())
-      })
-    });
+  {
+    // ANCHOR: hello_hole_2
+    let hello_provider: Session<SendValue<String, End>> =
+      send_value("Hello World!".to_string(), todo!());
+    // ANCHOR_END: hello_hole_2
+  }
 
-  let main: Session<End> = apply_channel(hello_client, hello_provider);
-
-  run_session(main).await;
+  {
+    let hello_provider: Session<SendValue<String, End>> =
+      send_value("Hello World!".to_string(), todo!() as Session<End>);
+  }
+  {
+    let hello_client: Session<ReceiveChannel<SendValue<String, End>, End>> =
+      receive_channel(move |a| {
+        todo!() as PartialSession<HList![_], End>
+      });
+  }
+  {
+    let hello_client: Session<ReceiveChannel<SendValue<String, End>, End>> =
+      receive_channel(move |a| {
+        todo!() as PartialSession<HList![SendValue<String, _>], End>
+      });
+  }
+  {
+    let hello_client: Session<ReceiveChannel<SendValue<String, End>, End>> =
+      receive_channel(move |a| {
+        receive_value_from(a, |val| todo!() as PartialSession<HList![End], End>)
+      });
+  }
+  {
+    let hello_client: Session<ReceiveChannel<SendValue<String, End>, End>> =
+      receive_channel(move |a| {
+        receive_value_from(a, move |val| {
+          wait(a, todo!() as PartialSession<HList![Empty], End>)
+        })
+      });
+  }
 }
-// ANCHOR_END: hello_3
 
 #[test]
-fn test_main()
-{
-  main();
-}
+fn test_main() {}
