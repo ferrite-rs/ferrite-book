@@ -1136,6 +1136,235 @@ requires the first element of the linear context to have the protocol
 new to Ferrite. But hopefully with some exercise, we should be able to get familiar
 with the error message and understand the meaning behind them.</p>
 <h1><a class="header" href="#hole-driven-development" id="hole-driven-development">Hole Driven Development</a></h1>
+<p>Just like learning any new programming language, it may be overwhelming to
+write your first session type program in Ferrite. To help you unstuck
+when encountering compile errors, we encourage the use of <em>typed holes</em>
+to discover what is needed to complete your program.</p>
+<p>The use of typed holes are common in languages like Haskell, Agda, and Idris.
+In Rust, there isn't officially support for using typed holes, but we can
+somewhat emulate the feature using techniques described in this chapter.</p>
+<h2><a class="header" href="#todo-placeholder" id="todo-placeholder">Todo Placeholder</a></h2>
+<p>Suppose we are a total beginner again, and we want to write our first
+<a href="02-main-concepts/../01-getting-started/02-hello-world.html">hello world provider</a>.
+We start by defining the session type we want, which is
+<code>SendValue&lt;String, End&gt;</code>, and we can then write down the outline
+for our Ferrite program as follows:</p>
+<pre><pre class="playground"><code class="language-rust edition2018">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hello_provider: Session&lt;SendValue&lt;String, End&gt;&gt; = todo!();
+<span class="boring">}
+</span></code></pre></pre>
+<p>The <a href="https://doc.rust-lang.org/std/macro.todo.html"><code>todo!</code></a> macro allows
+us to put a placeholder in unfinished Rust code so that we can try and
+compile the code and see if there is any type error. By writing our code
+step by step and filling the blank with <code>todo!()</code>, we can narrow down
+the potential places where our code is incorrect.</p>
+<p>At this stage, we should be able to compile our program with no error.
+This shows that the protocol that we have defined, <code>SendValue&lt;String, End&gt;</code>,
+is a valid session type. If we have gotten a compile error otherwise,
+it could have been caused by us trying to write an invalid protocol
+like <code>SendValue&lt;String, String&gt;</code>.</p>
+<p>When using <code>todo!()</code>, the Rust compiler might emit warnings about
+unreacheable code. Since we are still writing our program, we can
+add the <code>#![allow(unreachable_code)]</code> pragma to disable the warning
+temporarily until we finish writing the code.</p>
+<h2><a class="header" href="#unit-placeholder" id="unit-placeholder">Unit Placeholder</a></h2>
+<p>Now that we have defined the outline, we can move to the next step
+and try to write the first step. By looking at the first part
+<code>SendValue&lt;String, ...&gt;</code>, we know that we have to send a string
+value. But we might not know what should be done after sending
+the value, so we could write something like follows:</p>
+<pre><pre class="playground"><code class="language-rust edition2018">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hello_provider: Session&lt;SendValue&lt;String, End&gt;&gt; =
+  send_value(&quot;Hello World!&quot;.to_string(), todo!());
+<span class="boring">}
+</span></code></pre></pre>
+<p>We can try to compile our code again, and Rust will accept the code
+we have written. However the use of <code>todo!()</code> does not tell us
+how we should continue our program. In languages like Haskell,
+we could have used <code>_</code> instead of <code>todo!()</code>, and GHC would tell
+us what should be the type of the expression in the hole. In Rust,
+we would instead use the unit type <code>()</code> to deliberately cause
+a compile error:</p>
+<pre><pre class="playground"><code class="language-rust edition2018">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hello_provider: Session&lt;SendValue&lt;String, End&gt;&gt; =
+  send_value(&quot;Hello World!&quot;.to_string(), ());
+<span class="boring">}
+</span></code></pre></pre>
+<p>Now if we compile our code, we would get a compile error from Rust
+that looks like follows:</p>
+<pre><code>error[E0308]: mismatched types
+ |
+ |       send_value(&quot;Hello World!&quot;.to_string(), ());
+ |                                              ^^ expected struct `PartialSession`, found `()`
+ |
+ = note: expected struct `PartialSession&lt;(), End&gt;`
+         found unit type `()`
+
+</code></pre>
+<p>With this compile error, we can know that we are supposed to fill in the hole
+with Rust expression that has the type <code>PartialSession&lt;(), End&gt;</code>, or <code>Session&lt;End&gt;</code>.</p>
+<p>Sometimes we may also intuitively think of a type that should be in a hole.
+In such case, we can also use the <code>todo!() as T</code> pattern to verify if our intuition
+is correct. So we can for example write:</p>
+<pre><pre class="playground"><code class="language-rust edition2018">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hello_provider: Session&lt;SendValue&lt;String, End&gt;&gt; =
+  send_value(&quot;Hello World!&quot;.to_string(), todo!() as Session&lt;End&gt;);
+<span class="boring">}
+</span></code></pre></pre>
+<p>And our code will compile successfully. If we were to annotate it with an
+invalid type, such as <code>todo()! as Session&lt;ReceiveValue&lt;String, End&gt;&gt;</code> again,
+Rust will also return a compile error.</p>
+<p>Now that we know the continuation needs to have the type <code>Session&lt;End&gt;</code>, we
+can then fill in the blank with <code>terminate()</code> and complete our program.</p>
+<h2><a class="header" href="#underscores" id="underscores">Underscores</a></h2>
+<p>Now that we have finished <code>hello_provider</code>, we can try implementing
+<a href="02-main-concepts/../01-getting-started/03-communication.html"><code>hello_client</code></a> once again.
+Supposed we know that the first expression to match <code>ReceiveChannel&lt;...&gt;</code>
+is <code>receive_channel</code>, but we don't know what would be in the linear context,
+we can write our program as follows:</p>
+<pre><pre class="playground"><code class="language-rust edition2018">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hello_client: Session&lt;ReceiveChannel&lt;SendValue&lt;String, End&gt;, End&gt;&gt; =
+  receive_channel(move |a| {
+    todo!() as PartialSession&lt;HList![_], End&gt;
+  });
+<span class="boring">}
+</span></code></pre></pre>
+<p>The code above will still compile successfully with Rust, so we know that
+in our continuation, we have one element in the linear context as
+denoted by <code>HList![_]</code>, but we don't yet know what it is.
+Rust allows us to use <code>_</code> as a wildcard in places where it can infer the
+type, such as the case when we use it in <code>todo!() as ...</code>. Using this
+technique, we can also slowly narrow down our type definition and not
+get overwhelmed by an overly long error message.</p>
+<p>Now we can try and fill in the <code>_</code> with a bogus protocol like <code>End</code>
+and see what happens:</p>
+<pre><pre class="playground"><code class="language-rust edition2018">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hello_client: Session&lt;ReceiveChannel&lt;SendValue&lt;String, End&gt;, End&gt;&gt; =
+  receive_channel(move |a| {
+    todo!() as PartialSession&lt;HList![End], End&gt;
+  });
+<span class="boring">}
+</span></code></pre></pre>
+<p>Now if we try to compile our program again, we would get a compile error
+that looks like follows:</p>
+<pre><code>error[E0271]: type mismatch resolving `&lt;() as AppendContext&lt;(SendValue&lt;String, End&gt;, ())&gt;&gt;::Appended == (End, ())`
+ |
+ |       receive_channel(move |a| {
+ |       ^^^^^^^^^^^^^^^ expected struct `SendValue`, found struct `End`
+ |
+ = note: expected type `(SendValue&lt;String, End&gt;, ())`
+           found tuple `(End, ())`
+</code></pre>
+<p>The key information is in the last two lines, which states that there is a type mismatch
+between the expected type <code>(SendValue&lt;String, End&gt;, ())</code> and the actual type <code>(End, ())</code>.
+Recall from <a href="02-main-concepts/./02-linear-context.html">previous chapter</a> that this is the desugared versions
+of the expected list <code>HList![SendValue&lt;String, End&gt;]</code> and the actual list <code>HList![End]</code>.
+Using this information, we are able to fill in the correct type for our hole:</p>
+<pre><pre class="playground"><code class="language-rust edition2018">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hello_client: Session&lt;ReceiveChannel&lt;SendValue&lt;String, End&gt;, End&gt;&gt; =
+  receive_channel(move |a| {
+    todo!() as PartialSession&lt;HList![SendValue&lt;String, End&gt;], End&gt;
+  });
+<span class="boring">}
+</span></code></pre></pre>
+<p>When writing complex session type programs, we can also use <code>_</code> in places
+where we do not care about the actual type. For example, we may be interested
+to know whether the there is one channel in the linear context in the form
+<code>SendValue&lt;String, ...&gt;</code>. In that can we can also write our code as follows:</p>
+<pre><pre class="playground"><code class="language-rust edition2018">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hello_client: Session&lt;ReceiveChannel&lt;SendValue&lt;String, End&gt;, End&gt;&gt; =
+  receive_channel(move |a| {
+    todo!() as PartialSession&lt;HList![SendValue&lt;String, _&gt;], _&gt;
+  });
+<span class="boring">}
+</span></code></pre></pre>
+<p>Now that we know the first session type in the linear context is
+in the form <code>SendValue&lt;String, ...&gt;</code>, we can attempt to write the next
+part of our program. However suppose that we forgot that the behavior
+of protocols is inverted on the client side, we may try to write
+a program that sends a value to channel <code>a</code> instead of receiving from it:</p>
+<pre><pre class="playground"><code class="language-rust edition2018">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hello_client: Session&lt;ReceiveChannel&lt;SendValue&lt;String, End&gt;, End&gt;&gt; =
+  receive_channel(move |a| {
+    send_value_to(a, &quot;Hello World!&quot;.to_string(), todo!())
+  });
+<span class="boring">}
+</span></code></pre></pre>
+<p>If we try to compile the code, we would get an error such as follows,
+which is the same error as <a href="02-main-concepts/./04-channel-selectors.html">previously described</a>:</p>
+<pre><code>error[E0277]: the trait bound `Z: ContextLens&lt;(SendValue&lt;String, End&gt;, ()), ReceiveValue&lt;String, _&gt;, _&gt;` is not satisfied
+ |
+ |         send_value_to(a, &quot;Hello World!&quot;.to_string(), todo!())
+ |         ^^^^^^^^^^^^^ the trait `ContextLens&lt;(SendValue&lt;String, End&gt;, ()), ReceiveValue&lt;String, _&gt;, _&gt;` is not implemented for `Z`
+ |
+</code></pre>
+<p>With the help of <code>todo!()</code>, we are able to spot the type errors in our program before finish
+writing the whole program. It saves us the effort of figuring out what to fill in
+the blank inside <code>send_value_to(a, &quot;Hello World!&quot;.to_string(), ...)</code>, as our program
+is incorrect anyway.</p>
+<h2><a class="header" href="#comment" id="comment">Comment</a></h2>
+<p>Sometimes we may have written too much code, and by the time we try to compile our
+program, we get a big list of compile errors that are difficult to decipher.
+In such case, it may be helpful to comment out part of our Ferrite program
+and replace them with <code>todo!()</code>, to find out the initial place where the
+error occured.</p>
+<p>For example, suppose we finished writing the wrong implementation of <code>hello_client</code>,
+we can debug our code by commenting out the code to become something like:</p>
+<pre><pre class="playground"><code class="language-rust edition2018">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hello_client: Session&lt;ReceiveChannel&lt;SendValue&lt;String, End&gt;, End&gt;&gt; =
+  receive_channel(move |a| {
+    todo!()
+    // send_value_to(a, &quot;Hello World!&quot;.to_string(),
+    //   wait(a, terminate()))
+  });
+<span class="boring">}
+</span></code></pre></pre>
+<p>If we build our program at this step, the compilation will be successful again.
+We can then move forward to the next step of our program while still
+commenting out the remaining part:</p>
+<pre><pre class="playground"><code class="language-rust edition2018">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hello_client: Session&lt;ReceiveChannel&lt;SendValue&lt;String, End&gt;, End&gt;&gt; =
+  receive_channel(move |a| {
+    send_value_to(a, &quot;Hello World!&quot;.to_string(),
+      todo!())
+    //   wait(a, terminate()))
+  });
+<span class="boring">}
+</span></code></pre></pre>
+<p>At this step, we would then get a compile error. We can then know that
+the cause of the error is from our use of <code>send_value_to</code>, and is
+unaffected by the remaining expression <code>wait(a, terminate())</code>
+because they have been commented out and replaced with <code>todo!()</code>.</p>
+<h2><a class="header" href="#rust-ide" id="rust-ide">Rust IDE</a></h2>
+<p>When developing Ferrite programs, it may be helpful to use Rust IDEs
+such as <a href="https://rust-analyzer.github.io/">Rust Analayzer</a>. The IDE
+would show the hints on the types of the variables and functions.
+Using and IDE, we can for example easily see that the type of
+channel variables, such as <code>a</code> in <code>hello_client</code> has the type <code>Z</code>.
+This can be useful especially for beginners, who may be unfamiliar
+with the various types defined in Ferrite.</p>
 <h1><a class="header" href="#basic-constructs" id="basic-constructs">Basic Constructs</a></h1>
 <p>(TODO)</p>
 <h1><a class="header" href="#termination" id="termination">Termination</a></h1>
