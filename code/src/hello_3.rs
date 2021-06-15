@@ -27,9 +27,7 @@ async fn main()
   }
   {
     let hello_client: Session<ReceiveChannel<SendValue<String, End>, End>> =
-      receive_channel(move |a| {
-        todo!() as PartialSession<HList![_], End>
-      });
+      receive_channel(move |a| todo!() as PartialSession<HList![_], End>);
   }
   {
     let hello_client: Session<ReceiveChannel<SendValue<String, End>, End>> =
