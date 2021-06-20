@@ -1,8 +1,3 @@
-#![allow(dead_code)]
-#![allow(unreachable_code)]
-#![allow(unused_variables)]
-#![allow(clippy::diverging_sub_expression)]
-
 use ferrite_session::prelude::*;
 
 #[tokio::main]

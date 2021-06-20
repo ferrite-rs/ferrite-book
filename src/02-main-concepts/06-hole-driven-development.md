@@ -17,7 +17,7 @@ We start by defining the session type we want, which is
 `SendValue<String, End>`, and we can then write down the outline
 for our Ferrite program as follows:
 
-```rust
+```rust, noplaypen
 let hello_provider: Session<SendValue<String, End>> = todo!();
 ```
 
@@ -46,7 +46,7 @@ and try to write the first step. By looking at the first part
 value. But we might not know what should be done after sending
 the value, so we could write something like follows:
 
-```rust
+```rust, noplaypen
 let hello_provider: Session<SendValue<String, End>> =
   send_value("Hello World!".to_string(), todo!());
 ```
@@ -59,7 +59,7 @@ us what should be the type of the expression in the hole. In Rust,
 we would instead use the unit type `()` to deliberately cause
 a compile error:
 
-```rust
+```rust, noplaypen
 let hello_provider: Session<SendValue<String, End>> =
   send_value("Hello World!".to_string(), ());
 ```
@@ -85,7 +85,7 @@ Sometimes we may also intuitively think of a type that should be in a hole.
 In such case, we can also use the `todo!() as T` pattern to verify if our intuition
 is correct. So we can for example write:
 
-```rust
+```rust, noplaypen
 let hello_provider: Session<SendValue<String, End>> =
   send_value("Hello World!".to_string(), todo!() as Session<End>);
 ```
@@ -105,7 +105,7 @@ Supposed we know that the first expression to match `ReceiveChannel<...>`
 is `receive_channel`, but we don't know what would be in the linear context,
 we can write our program as follows:
 
-```rust
+```rust, noplaypen
 let hello_client: Session<ReceiveChannel<SendValue<String, End>, End>> =
   receive_channel(move |a| {
     todo!() as PartialSession<HList![_], End>
@@ -123,7 +123,7 @@ get overwhelmed by an overly long error message.
 Now we can try and fill in the `_` with a bogus protocol like `End`
 and see what happens:
 
-```rust
+```rust, noplaypen
 let hello_client: Session<ReceiveChannel<SendValue<String, End>, End>> =
   receive_channel(move |a| {
     todo!() as PartialSession<HList![End], End>
@@ -149,7 +149,7 @@ Recall from [previous chapter](./02-linear-context.md) that this is the desugare
 of the expected list `HList![SendValue<String, End>]` and the actual list `HList![End]`.
 Using this information, we are able to fill in the correct type for our hole:
 
-```rust
+```rust, noplaypen
 let hello_client: Session<ReceiveChannel<SendValue<String, End>, End>> =
   receive_channel(move |a| {
     todo!() as PartialSession<HList![SendValue<String, End>], End>
@@ -161,7 +161,7 @@ where we do not care about the actual type. For example, we may be interested
 to know whether the there is one channel in the linear context in the form
 `SendValue<String, ...>`. In that can we can also write our code as follows:
 
-```rust
+```rust, noplaypen
 let hello_client: Session<ReceiveChannel<SendValue<String, End>, End>> =
   receive_channel(move |a| {
     todo!() as PartialSession<HList![SendValue<String, _>], _>
@@ -174,7 +174,7 @@ part of our program. However suppose that we forgot that the behavior
 of protocols is inverted on the client side, we may try to write
 a program that sends a value to channel `a` instead of receiving from it:
 
-```rust
+```rust, noplaypen
 let hello_client: Session<ReceiveChannel<SendValue<String, End>, End>> =
   receive_channel(move |a| {
     send_value_to(a, "Hello World!".to_string(), todo!())
@@ -208,7 +208,7 @@ error occured.
 For example, suppose we finished writing the wrong implementation of `hello_client`,
 we can debug our code by commenting out the code to become something like:
 
-```rust
+```rust, noplaypen
 let hello_client: Session<ReceiveChannel<SendValue<String, End>, End>> =
   receive_channel(move |a| {
     todo!()
@@ -221,7 +221,7 @@ If we build our program at this step, the compilation will be successful again.
 We can then move forward to the next step of our program while still
 commenting out the remaining part:
 
-```rust
+```rust, noplaypen
 let hello_client: Session<ReceiveChannel<SendValue<String, End>, End>> =
   receive_channel(move |a| {
     send_value_to(a, "Hello World!".to_string(),

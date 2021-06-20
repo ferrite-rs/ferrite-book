@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 // ANCHOR: hello_1
 use ferrite_session::prelude::*;
 

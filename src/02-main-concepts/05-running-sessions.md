@@ -7,7 +7,7 @@ until we run it at a later time. Ferrite provides two public functions,
 
 ## `run_session`
 
-```rust
+```rust, noplaypen
 async fn run_session(session: Session<End>)
 ```
 
@@ -23,7 +23,7 @@ For instance, how are we supposed to finish run a Ferrite program that offers
 
 ## `apply_channel`
 
-```rust
+```rust, noplaypen
 fn apply_channel<A: Protocol, B: Protocol>(
   f: Session<ReceiveChannel<A, B>>,
   a: Session<A>,
@@ -53,14 +53,14 @@ original program.
 As an example, consider a `show_number` program that receives an integer and then prints out the
 value it receives:
 
-```rust
+```rust, noplaypen
 {{#include ../../code/src/hello_4.rs:show_number}}
 ```
 
 We cannot run `show_number` directly, because it expects an integer to be sent to it. But we can
 now write a `main` program that includes `show_number` as follows:
 
-```rust
+```rust, noplaypen
 {{#include ../../code/src/hello_4.rs:main}}
 ```
 
@@ -75,7 +75,7 @@ Because the protocol offered by `main` is `End`, we can now run the full program
 ## `run_session_with_result`
 
 
-```rust
+```rust, noplaypen
 async fn run_session_with_result<T: Send + 'static>(
   session: Session<SendValue<T, End>>
 ) -> T

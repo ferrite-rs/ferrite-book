@@ -20,7 +20,7 @@ ferrite-session = "0.1.4"
 
 To use the constructs provided by Ferrite, import everything from the `ferrite_session::prelude` module. You'd also need to provide a `tokio` runtime for Ferrite to spawn its async tasks. This can be done by adding the `#[tokio::main]` attribute to your main function.
 
-```rust
+```rust, noplaypen
 use ferrite_session::prelude::*;
 
 #[tokio::main]

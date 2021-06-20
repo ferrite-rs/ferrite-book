@@ -12,7 +12,7 @@ protocol, and then link it with `hello_provider`.
 
 First, we define `hello_client` to have the following type:
 
-```rust
+```rust, noplaypen
 let hello_client: Session<ReceiveChannel<Hello, End>> = ...
 ```
 
@@ -42,7 +42,7 @@ Now back to our `hello_client` example. The session type
 a channel of session type `Hello`, and then terminates with `End`.
 To implement such a session type, we can implement `hello_client` as follows:
 
-```rust
+```rust, noplaypen
 {{#include ../../code/src/hello_2.rs:hello_client}}
 ```
 
@@ -50,7 +50,7 @@ Our `hello_client` body looks slightly more complicated than `hello_provider`.
 To understand what's going on, we will go through each line of
 `hello_client`'s body. Starting with `receive_channel`:
 
-```rust
+```rust, noplaypen
 receive_channel(|provider| { ... })
 ```
 
@@ -74,7 +74,7 @@ is expected to send a `String` value, as a client we are expected to
 _receive_ a `String` value from the provider. We can do that using
 `receive_value_from`:
 
-```rust
+```rust, noplaypen
 receive_value_from(provider, move |greeting| {
   println!("Received greetings from provider: {}", greeting);
   ...
@@ -101,7 +101,7 @@ type `End` by terminating. But we can't terminate just yet, because
 but may not yet been terminated. Hence we would first have to wait
 for `a` to terminate using `wait`:
 
-```rust
+```rust, noplaypen
 wait(provider, terminate())
 ```
 
@@ -121,7 +121,7 @@ To link `hello_client` specifically with `hello_provider`, we have to
 explicitly ask Ferrite to perform the linking. This can be done
 using `apply_channel`:
 
-```rust
+```rust, noplaypen
 {{#include ../../code/src/hello_2.rs:apply_channel}}
 ```
 
@@ -146,7 +146,7 @@ the two processes.
 Since `main` has the session type `End`, we can use the Ferrite construct
 `run_session` to run the program:
 
-```rust
+```rust, noplaypen
 {{#include ../../code/src/hello_2.rs:run_session}}
 ```
 
@@ -162,6 +162,6 @@ Putting everything together, we now have our second hello world program
 that is made of a `hello_provider` and a `hello_client` communicating
 with each others.
 
-```rust
+```rust, noplaypen
 {{#include ../../code/src/hello_2.rs:hello_2}}
 ```

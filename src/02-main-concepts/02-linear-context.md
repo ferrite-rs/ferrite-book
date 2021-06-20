@@ -16,7 +16,7 @@ So in the case of [`hello_client`](../01-getting-started/03-communication.md),
 we bind the channel variable `a` to the client channel of protocol
 `SendValue<String, End>`, so that it can _receive_ a string value from the provider.
 
-```rust
+```rust, noplaypen
 {{#include ../../code/src/hello_2.rs:hello_client}}
 ```
 

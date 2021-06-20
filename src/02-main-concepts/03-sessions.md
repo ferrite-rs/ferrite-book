@@ -46,7 +46,7 @@ why don't we just define `hello_client` to have the type
 The reason is because a partial session has _free variables_ that
 are not captured by the program. Consider the following invalid program:
 
-```rust
+```rust, noplaypen
 let hello_client_incorrect
   : PartialSession<HList![ReceiveValue<String, End>], End>
   = receive_value_from(a, move |greeting| {

@@ -13,7 +13,7 @@ service in a linear fashion.
 In this example, we will define a simple `Hello` protocol that has
 the session type `SendValue<String, End>`:
 
-```rust
+```rust, noplaypen
 type Hello = SendValue<String, End>;
 ```
 
@@ -33,7 +33,7 @@ _continues_ as session type `End`, which happens to simply terminates.
 
 We first look at how a provider for the `Hello` protocol can be implemented:
 
-```rust
+```rust, noplaypen
 {{#include ../../code/src/hello_1.rs:hello_provider}}
 ```
 
@@ -63,7 +63,7 @@ Ferrite provides a special case for Ferrite programs that offer the session type
 `SendValue<T, End>`. So we can run our `hello_provider` by calling
 `run_session_with_result`:
 
-```rust
+```rust, noplaypen
 {{#include ../../code/src/hello_1.rs:run_session_with_result}}
 ```
 
@@ -82,7 +82,7 @@ After getting the result back, we can print the received string using
 
 Putting everything together, our first hello world program is written as follows:
 
-```rust
+```rust, noplaypen
 {{#include ../../code/src/hello_1.rs:hello_1}}
 ```
 

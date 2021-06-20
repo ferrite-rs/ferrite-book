@@ -12,7 +12,7 @@ programs are written incorrectly.
 Let's consider the `hello_provider` program that we have written in the
 previous chapter:
 
-```rust
+```rust, noplaypen
 {{#include ../../code/src/hello_2.rs:hello_provider}}
 ```
 
@@ -22,7 +22,7 @@ But what if we implement `hello_provider` such that it terminates
 immediately without sending a string?
 
 
-```rust
+```rust, noplaypen
 let hello_provider_incorrect: Session<Hello> = terminate();
 ```
 
@@ -59,7 +59,7 @@ as the type mismatch is on the offered channel. On the other hand, recall that
 and one that offers the session type `End`.
 
 
-```rust
+```rust, noplaypen
 {{#include ../../code/src/hello_2.rs:hello_client}}
 ```
 
@@ -67,7 +67,7 @@ Based on the protocol specification, it looks like `hello_client` should be able
 to receive a `Hello` channel, ignores the channel, and proceed to terminate
 immediately. So let's try implementing a new client to do just that:
 
-```rust
+```rust, noplaypen
 let hello_client_incorrect: Session<ReceiveChannel<Hello, End>> =
   receive_channel(|provider| {
     terminate()
@@ -118,7 +118,7 @@ The linear usage of Ferrite channels is different from the _affine_ usage
 of Rust objects. Consider an equivalent of `hello_client` implemented
 using [Rust channels](https://doc.rust-lang.org/std/sync/mpsc/fn.channel.html):
 
-```rust
+```rust, noplaypen
 fn hello_client_rust(receiver: Receiver<String>) {
   // drops receiver immediately
 }

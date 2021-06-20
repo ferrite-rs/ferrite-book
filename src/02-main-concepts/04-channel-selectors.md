@@ -107,7 +107,7 @@ by hard coding the specific context lenses to access the channels in the linear 
 For example, we could have written a partial version of `hello_client` as follows:
 
 
-```rust
+```rust, noplaypen
 {{#include ../../code/src/hello_2.rs:hello_client_partial}}
 ```
 
@@ -130,7 +130,7 @@ we may get compile errors showing that types like `Z` do not implement a particu
 As an example, consider the following incorrect version of `hello_client` that tries to
 send a value to `a` instead of receiving from it:
 
-```rust
+```rust, noplaypen
 let hello_client_incorrect
   : Session<ReceiveChannel<SendValue<String, End>, End>>
   = receive_channel(|a| {

@@ -10,3 +10,7 @@ create-missing = false
 
 [rust]
 edition = "2018"
+noplaypen = true
+
+[output.html]
+mathjax-support = true

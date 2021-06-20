@@ -1,3 +1,0 @@
-# Recursive Session Types
-
-(TODO)
