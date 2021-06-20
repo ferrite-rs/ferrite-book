@@ -43,6 +43,9 @@
         
 
         
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
     </head>
     <body>
         <!-- Provide site root to javascript -->
@@ -93,7 +96,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../ferrite.html"><strong aria-hidden="true">1.</strong> Writing Session-Typed Ferrite Programs in Rust</a></li><li class="chapter-item expanded "><a href="../01-getting-started/00-getting-started.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../01-getting-started/01-installation.html"><strong aria-hidden="true">2.1.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../01-getting-started/02-hello-world.html"><strong aria-hidden="true">2.2.</strong> Hello World</a></li><li class="chapter-item expanded "><a href="../01-getting-started/03-communication.html" class="active"><strong aria-hidden="true">2.3.</strong> Client Communication</a></li><li class="chapter-item expanded "><a href="../01-getting-started/04-type-errors.html"><strong aria-hidden="true">2.4.</strong> Type Errors</a></li><li class="chapter-item expanded "><a href="../01-getting-started/05-session-types.html"><strong aria-hidden="true">2.5.</strong> Session Types</a></li></ol></li><li class="chapter-item expanded "><a href="../02-main-concepts/00-main-concepts.html"><strong aria-hidden="true">3.</strong> Main Concepts</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../02-main-concepts/01-protocols.html"><strong aria-hidden="true">3.1.</strong> Protocols</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/02-linear-context.html"><strong aria-hidden="true">3.2.</strong> Linear Context</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/03-sessions.html"><strong aria-hidden="true">3.3.</strong> Sessions</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/04-channel-selectors.html"><strong aria-hidden="true">3.4.</strong> Channel Selectors</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/05-running-sessions.html"><strong aria-hidden="true">3.5.</strong> Running Sessions</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/06-hole-driven-development.html"><strong aria-hidden="true">3.6.</strong> Hole Driven Development</a></li></ol></li><li class="chapter-item expanded "><a href="../03-basic-constructs/00-basic-constructs.html"><strong aria-hidden="true">4.</strong> Basic Constructs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../03-basic-constructs/01-termination.html"><strong aria-hidden="true">4.1.</strong> Termination</a></li><li class="chapter-item expanded "><a href="../03-basic-constructs/02-send-receive-values.html"><strong aria-hidden="true">4.2.</strong> Send / Receive Values</a></li><li class="chapter-item expanded "><a href="../03-basic-constructs/03-send-receive-channels.html"><strong aria-hidden="true">4.3.</strong> Send / Receive Channels</a></li><li class="chapter-item expanded "><a href="../03-basic-constructs/04-external-choice.html"><strong aria-hidden="true">4.4.</strong> External Choice</a></li><li class="chapter-item expanded "><a href="../03-basic-constructs/05-internal-choice.html"><strong aria-hidden="true">4.5.</strong> Internal Choice</a></li></ol></li><li class="chapter-item expanded "><a href="../04-advanced-constructs/00-advanced-constructs.html"><strong aria-hidden="true">5.</strong> Advanced Constructs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../04-advanced-constructs/01-recursive-session-types.html"><strong aria-hidden="true">5.1.</strong> Recursive Session Types</a></li><li class="chapter-item expanded "><a href="../04-advanced-constructs/02-communication.html"><strong aria-hidden="true">5.2.</strong> Communication</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Shared Session Types</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">7.</strong> Example Usage</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">7.1.</strong> Communication Protocols</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">7.2.</strong> Shared Resources</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">8.</strong> Ferrite Internals</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">8.1.</strong> Higher Kinded Types</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">8.2.</strong> Cloaking Constraints</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">8.3.</strong> Optics</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">8.4.</strong> Row Polymorphism</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">9.</strong> Conclusion</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">10.</strong> TODO</div></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../ferrite.html"><strong aria-hidden="true">1.</strong> Writing Session-Typed Ferrite Programs in Rust</a></li><li class="chapter-item expanded "><a href="../01-getting-started/00-getting-started.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../01-getting-started/01-installation.html"><strong aria-hidden="true">2.1.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../01-getting-started/02-hello-world.html"><strong aria-hidden="true">2.2.</strong> Hello World</a></li><li class="chapter-item expanded "><a href="../01-getting-started/03-communication.html" class="active"><strong aria-hidden="true">2.3.</strong> Client Communication</a></li><li class="chapter-item expanded "><a href="../01-getting-started/04-type-errors.html"><strong aria-hidden="true">2.4.</strong> Type Errors</a></li><li class="chapter-item expanded "><a href="../01-getting-started/05-session-types.html"><strong aria-hidden="true">2.5.</strong> Session Types</a></li></ol></li><li class="chapter-item expanded "><a href="../02-main-concepts/00-main-concepts.html"><strong aria-hidden="true">3.</strong> Main Concepts</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../02-main-concepts/01-protocols.html"><strong aria-hidden="true">3.1.</strong> Protocols</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/02-linear-context.html"><strong aria-hidden="true">3.2.</strong> Linear Context</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/03-sessions.html"><strong aria-hidden="true">3.3.</strong> Sessions</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/04-channel-selectors.html"><strong aria-hidden="true">3.4.</strong> Channel Selectors</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/05-running-sessions.html"><strong aria-hidden="true">3.5.</strong> Running Sessions</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/06-hole-driven-development.html"><strong aria-hidden="true">3.6.</strong> Hole Driven Development</a></li></ol></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/00-ferrite-constructs.html"><strong aria-hidden="true">4.</strong> Ferrite Constructs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../03-ferrite-constructs/01-termination.html"><strong aria-hidden="true">4.1.</strong> Termination</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/02-forward.html"><strong aria-hidden="true">4.2.</strong> Forward</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/03-include.html"><strong aria-hidden="true">4.3.</strong> Include</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/04-apply.html"><strong aria-hidden="true">4.4.</strong> Apply</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/05-step.html"><strong aria-hidden="true">4.5.</strong> Step</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/06-run-session.html"><strong aria-hidden="true">4.6.</strong> Run Session</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/07-receive-value.html"><strong aria-hidden="true">4.7.</strong> Receive Value</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/08-send-value.html"><strong aria-hidden="true">4.8.</strong> Send Value</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/09-receive-channel.html"><strong aria-hidden="true">4.9.</strong> Receive Channel</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/10-send-channel.html"><strong aria-hidden="true">4.10.</strong> Send Channel</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/11-external-choice.html"><strong aria-hidden="true">4.11.</strong> External Choice</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/12-internal-choice.html"><strong aria-hidden="true">4.12.</strong> Internal Choice</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/13-n-ary-choice.html"><strong aria-hidden="true">4.13.</strong> N-ary Choice</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/14-recursive.html"><strong aria-hidden="true">4.14.</strong> Recursive Session Types</a></li></ol></li><li class="chapter-item expanded "><a href="../04-shared-sesion-types/00-shared-session-types.html"><strong aria-hidden="true">5.</strong> Shared Session Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../04-shared-sesion-types/01-shared-provider.html"><strong aria-hidden="true">5.1.</strong> Shared Provider</a></li><li class="chapter-item expanded "><a href="../04-shared-sesion-types/02-run-shared-session.html"><strong aria-hidden="true">5.2.</strong> Run Shared Session</a></li><li class="chapter-item expanded "><a href="../04-shared-sesion-types/03-shared-client.html"><strong aria-hidden="true">5.3.</strong> Shared Client</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> TODO</div></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -169,12 +172,8 @@ each others.</p>
 define a <code>hello_client</code> that <em>communicates</em> with a provider of the <code>Hello</code>
 protocol, and then link it with <code>hello_provider</code>.</p>
 <p>First, we define <code>hello_client</code> to have the following type:</p>
-<pre><pre class="playground"><code class="language-rust edition2018">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>let hello_client: Session&lt;ReceiveChannel&lt;Hello, End&gt;&gt; = ...
-<span class="boring">}
-</span></code></pre></pre>
+<pre><code class="language-rust noplaypen">let hello_client: Session&lt;ReceiveChannel&lt;Hello, End&gt;&gt; = ...
+</code></pre>
 <p>Our <code>hello_client</code> has the Rust type <code>Session&lt;ReceiveChannel&lt;Hello, End&gt;&gt;</code>,
 indicating that it is a Ferrite program offering the session type
 <code>ReceiveChannel&lt;Hello, End&gt;</code>. Here we encounter a new session type in the form
@@ -195,27 +194,19 @@ important, and why bare Rust code is not sufficient to support linearity.</p>
 <code>ReceiveChannel&lt;Hello, End&gt;</code> indicates that <code>hello_client</code> is <em>receiving</em>
 a channel of session type <code>Hello</code>, and then terminates with <code>End</code>.
 To implement such a session type, we can implement <code>hello_client</code> as follows:</p>
-<pre><pre class="playground"><code class="language-rust edition2018">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>  let hello_client: Session&lt;ReceiveChannel&lt;Hello, End&gt;&gt; =
+<pre><code class="language-rust noplaypen">  let hello_client: Session&lt;ReceiveChannel&lt;Hello, End&gt;&gt; =
     receive_channel(|a| {
       receive_value_from(a, move |greeting| {
         println!(&quot;Received greetings from provider: {}&quot;, greeting);
         wait(a, terminate())
       })
     });
-<span class="boring">}
-</span></code></pre></pre>
+</code></pre>
 <p>Our <code>hello_client</code> body looks slightly more complicated than <code>hello_provider</code>.
 To understand what's going on, we will go through each line of
 <code>hello_client</code>'s body. Starting with <code>receive_channel</code>:</p>
-<pre><pre class="playground"><code class="language-rust edition2018">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>receive_channel(|provider| { ... })
-<span class="boring">}
-</span></code></pre></pre>
+<pre><code class="language-rust noplaypen">receive_channel(|provider| { ... })
+</code></pre>
 <p>To match the final session type <code>ReceiveChannel&lt;Hello, End&gt;</code> that is
 offered by <code>hello_client</code>, we use <code>receive_channel</code> to receive a
 channel of session type <code>Hello</code>, and then binds it to the <em>channel variable</em>
@@ -233,15 +224,11 @@ to consume the session type <code>SendValue&lt;String, End&gt;</code>. Since the
 is expected to send a <code>String</code> value, as a client we are expected to
 <em>receive</em> a <code>String</code> value from the provider. We can do that using
 <code>receive_value_from</code>:</p>
-<pre><pre class="playground"><code class="language-rust edition2018">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>receive_value_from(provider, move |greeting| {
+<pre><code class="language-rust noplaypen">receive_value_from(provider, move |greeting| {
   println!(&quot;Received greetings from provider: {}&quot;, greeting);
   ...
 })
-<span class="boring">}
-</span></code></pre></pre>
+</code></pre>
 <p>We use <code>receive_value_from</code> to receive a value sent from the <code>a</code>
 channel, and then bind the received <code>String</code> value to the Rust variable
 <code>greeting</code>. We then print out the value of <code>greeting</code> using <code>println!</code>.
@@ -259,12 +246,8 @@ type <code>End</code> by terminating. But we can't terminate just yet, because
 <code>End</code> simply indicates that the provider will eventually terminates,
 but may not yet been terminated. Hence we would first have to wait
 for <code>a</code> to terminate using <code>wait</code>:</p>
-<pre><pre class="playground"><code class="language-rust edition2018">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>wait(provider, terminate())
-<span class="boring">}
-</span></code></pre></pre>
+<pre><code class="language-rust noplaypen">wait(provider, terminate())
+</code></pre>
 <p>We use <code>wait</code> to wait for the provider on the other side of a
 channel to terminate. After that, the <code>a</code> channel is discarded,
 and we don't have anymore unused channel variable. With that, we
@@ -277,12 +260,8 @@ In theory, we can call <code>hello_client</code> with any provider that offers
 <p>To link <code>hello_client</code> specifically with <code>hello_provider</code>, we have to
 explicitly ask Ferrite to perform the linking. This can be done
 using <code>apply_channel</code>:</p>
-<pre><pre class="playground"><code class="language-rust edition2018">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>  let main: Session&lt;End&gt; = apply_channel(hello_client, hello_provider);
-<span class="boring">}
-</span></code></pre></pre>
+<pre><code class="language-rust noplaypen">  let main: Session&lt;End&gt; = apply_channel(hello_client, hello_provider);
+</code></pre>
 <p>The <code>apply_channel</code> construct is provided by Ferrite to link a
 client Ferrite program of session type <code>ReceiveChannel&lt;A, B&gt;</code>
 with a provider Ferrite program of session type <code>A</code>,
@@ -299,12 +278,8 @@ program. When <code>main</code> is executed, it will run both <code>hello_provid
 the two processes.</p>
 <p>Since <code>main</code> has the session type <code>End</code>, we can use the Ferrite construct
 <code>run_session</code> to run the program:</p>
-<pre><pre class="playground"><code class="language-rust edition2018">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>  run_session(main).await;
-<span class="boring">}
-</span></code></pre></pre>
+<pre><code class="language-rust noplaypen">  run_session(main).await;
+</code></pre>
 <p><code>run_session</code> accepts any Ferrite program offering the session type <code>End</code>,
 executes the program, and wait for it to terminate. <code>run_session</code> is
 similar to <code>run_session_with_result</code>, other than it does not expect
@@ -313,7 +288,7 @@ the Ferrite program to send back any Rust value as the result.</p>
 <p>Putting everything together, we now have our second hello world program
 that is made of a <code>hello_provider</code> and a <code>hello_client</code> communicating
 with each others.</p>
-<pre><pre class="playground"><code class="language-rust edition2018">use ferrite_session::prelude::*;
+<pre><code class="language-rust noplaypen">use ferrite_session::prelude::*;
 
 type Hello = SendValue&lt;String, End&gt;;
 
@@ -343,7 +318,7 @@ async fn main()
 
   run_session(main).await;
 }
-</code></pre></pre>
+</code></pre>
 
                     </main>
 

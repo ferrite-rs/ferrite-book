@@ -1,0 +1,312 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>External Choice - Writing Session-Typed Ferrite Programs in Rust</title>
+        
+        
+
+
+        <!-- Custom HTML head -->
+        
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        
+        <link rel="icon" href="../favicon.svg">
+        
+        
+        <link rel="shortcut icon" href="../favicon.png">
+        
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../ferrite.html"><strong aria-hidden="true">1.</strong> Writing Session-Typed Ferrite Programs in Rust</a></li><li class="chapter-item expanded "><a href="../01-getting-started/00-getting-started.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../01-getting-started/01-installation.html"><strong aria-hidden="true">2.1.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../01-getting-started/02-hello-world.html"><strong aria-hidden="true">2.2.</strong> Hello World</a></li><li class="chapter-item expanded "><a href="../01-getting-started/03-communication.html"><strong aria-hidden="true">2.3.</strong> Client Communication</a></li><li class="chapter-item expanded "><a href="../01-getting-started/04-type-errors.html"><strong aria-hidden="true">2.4.</strong> Type Errors</a></li><li class="chapter-item expanded "><a href="../01-getting-started/05-session-types.html"><strong aria-hidden="true">2.5.</strong> Session Types</a></li></ol></li><li class="chapter-item expanded "><a href="../02-main-concepts/00-main-concepts.html"><strong aria-hidden="true">3.</strong> Main Concepts</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../02-main-concepts/01-protocols.html"><strong aria-hidden="true">3.1.</strong> Protocols</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/02-linear-context.html"><strong aria-hidden="true">3.2.</strong> Linear Context</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/03-sessions.html"><strong aria-hidden="true">3.3.</strong> Sessions</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/04-channel-selectors.html"><strong aria-hidden="true">3.4.</strong> Channel Selectors</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/05-running-sessions.html"><strong aria-hidden="true">3.5.</strong> Running Sessions</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/06-hole-driven-development.html"><strong aria-hidden="true">3.6.</strong> Hole Driven Development</a></li></ol></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/00-ferrite-constructs.html"><strong aria-hidden="true">4.</strong> Ferrite Constructs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../03-ferrite-constructs/01-termination.html"><strong aria-hidden="true">4.1.</strong> Termination</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/02-forward.html"><strong aria-hidden="true">4.2.</strong> Forward</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/03-include.html"><strong aria-hidden="true">4.3.</strong> Include</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/04-apply.html"><strong aria-hidden="true">4.4.</strong> Apply</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/05-step.html"><strong aria-hidden="true">4.5.</strong> Step</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/06-run-session.html"><strong aria-hidden="true">4.6.</strong> Run Session</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/07-receive-value.html"><strong aria-hidden="true">4.7.</strong> Receive Value</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/08-send-value.html"><strong aria-hidden="true">4.8.</strong> Send Value</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/09-receive-channel.html"><strong aria-hidden="true">4.9.</strong> Receive Channel</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/10-send-channel.html"><strong aria-hidden="true">4.10.</strong> Send Channel</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/11-external-choice.html" class="active"><strong aria-hidden="true">4.11.</strong> External Choice</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/12-internal-choice.html"><strong aria-hidden="true">4.12.</strong> Internal Choice</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/13-n-ary-choice.html"><strong aria-hidden="true">4.13.</strong> N-ary Choice</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/14-recursive.html"><strong aria-hidden="true">4.14.</strong> Recursive Session Types</a></li></ol></li><li class="chapter-item expanded "><a href="../04-shared-sesion-types/00-shared-session-types.html"><strong aria-hidden="true">5.</strong> Shared Session Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../04-shared-sesion-types/01-shared-provider.html"><strong aria-hidden="true">5.1.</strong> Shared Provider</a></li><li class="chapter-item expanded "><a href="../04-shared-sesion-types/02-run-shared-session.html"><strong aria-hidden="true">5.2.</strong> Run Shared Session</a></li><li class="chapter-item expanded "><a href="../04-shared-sesion-types/03-shared-client.html"><strong aria-hidden="true">5.3.</strong> Shared Client</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> TODO</div></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        
+                    </div>
+
+                    <h1 class="menu-title">Writing Session-Typed Ferrite Programs in Rust</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#binary-external-choice" id="binary-external-choice">Binary External Choice</a></h1>
+<h2><a class="header" href="#provider-rule-offer-choice" id="provider-rule-offer-choice">Provider Rule: Offer Choice</a></h2>
+<pre><code class="language-rust noplaypen">macro offer_choice! &lt;C, A, B&gt; {
+  Left =&gt; $expr: PartialSession&lt;C, A&gt;,
+  Right =&gt; $expr: PartialSession&lt;C, B&gt;,
+} -&gt;
+  PartialSession&lt;C, ExternalChoice&lt;Either&lt;A, B&gt;&gt;&gt;
+</code></pre>
+<h3><a class="header" href="#example" id="example">Example</a></h3>
+<pre><code class="language-rust noplaypen">    use ferrite_session::{
+      either::*,
+      prelude::*,
+    };
+
+    let p: Session&lt;
+      ExternalChoice&lt;Either&lt;ReceiveValue&lt;String, End&gt;, SendValue&lt;u64, End&gt;&gt;&gt;,
+    &gt; = offer_choice! {
+      Left =&gt;
+        receive_value(move |name| {
+          println!(&quot;Hello, {}!&quot;, name);
+          terminate()
+        })
+      Right =&gt;
+        send_value(42, terminate())
+    };
+</code></pre>
+<h2><a class="header" href="#client-rule-choose-left" id="client-rule-choose-left">Client Rule: Choose Left</a></h2>
+<pre><code class="language-rust noplaypen">macro choose! &lt;N, C1, C2, A1, A2, B&gt; (
+  n: N, Left,
+  cont: PartialSession&lt;C2, B&gt;
+) -&gt;  PartialSession&lt;C1, B&gt;
+</code></pre>
+<ul>
+<li><code>C1</code> is in the form <code>HList[…, N: ExternalChoice&lt;Either&lt;A1, A2&gt;&gt;, …]</code></li>
+<li><code>C2</code> is in the form <code>HList[…, N: A1, …]</code>, with the remaining elements
+being the same as in <code>C1</code>.</li>
+</ul>
+<h3><a class="header" href="#example-1" id="example-1">Example</a></h3>
+<pre><code class="language-rust noplaypen">    let p: Session&lt;
+      ReceiveChannel&lt;
+        ExternalChoice&lt;Either&lt;ReceiveValue&lt;String, End&gt;, SendValue&lt;u64, End&gt;&gt;&gt;,
+        End,
+      &gt;,
+    &gt; = receive_channel(move |c| {
+      choose!(
+        c,
+        Left,
+        send_value_to(c, &quot;Hello World!&quot;.to_string(), wait(c, terminate()))
+      )
+    });
+</code></pre>
+<h2><a class="header" href="#client-rule-choose-right" id="client-rule-choose-right">Client Rule: Choose Right</a></h2>
+<pre><code class="language-rust noplaypen">macro choose! &lt;N, C1, C2, A1, A2, B&gt; (
+  $n: N, Right,
+  $cont: PartialSession&lt;C2, B&gt;
+) -&gt;  PartialSession&lt;C1, B&gt;
+</code></pre>
+<ul>
+<li><code>C1</code> is in the form <code>HList[…, N: ExternalChoice&lt;Either&lt;A1, A2&gt;&gt;, …]</code></li>
+<li><code>C2</code> is in the form <code>HList[…, N: A2, …]</code>, with the remaining elements
+being the same as in <code>C1</code>.</li>
+</ul>
+<h3><a class="header" href="#example-2" id="example-2">Example</a></h3>
+<pre><code class="language-rust noplaypen">    let p: Session&lt;
+      ReceiveChannel&lt;
+        ExternalChoice&lt;Either&lt;ReceiveValue&lt;String, End&gt;, SendValue&lt;u64, End&gt;&gt;&gt;,
+        End,
+      &gt;,
+    &gt; = receive_channel(move |c| {
+      choose!(
+        c,
+        Right,
+        receive_value_from(c, move |x| {
+          println!(&quot;{}&quot;, x);
+          wait(c, terminate())
+        })
+      )
+    });
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../03-ferrite-constructs/10-send-channel.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../03-ferrite-constructs/12-internal-choice.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a rel="prev" href="../03-ferrite-constructs/10-send-channel.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a rel="next" href="../03-ferrite-constructs/12-internal-choice.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

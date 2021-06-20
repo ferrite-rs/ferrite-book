@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Communication - Writing Session-Typed Ferrite Programs in Rust</title>
+        <title>N-ary Choice - Writing Session-Typed Ferrite Programs in Rust</title>
         
         
 
@@ -42,6 +42,9 @@
         <!-- Custom theme stylesheets -->
         
 
+        
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
         
     </head>
     <body>
@@ -93,7 +96,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../ferrite.html"><strong aria-hidden="true">1.</strong> Writing Session-Typed Ferrite Programs in Rust</a></li><li class="chapter-item expanded "><a href="../01-getting-started/00-getting-started.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../01-getting-started/01-installation.html"><strong aria-hidden="true">2.1.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../01-getting-started/02-hello-world.html"><strong aria-hidden="true">2.2.</strong> Hello World</a></li><li class="chapter-item expanded "><a href="../01-getting-started/03-communication.html"><strong aria-hidden="true">2.3.</strong> Client Communication</a></li><li class="chapter-item expanded "><a href="../01-getting-started/04-type-errors.html"><strong aria-hidden="true">2.4.</strong> Type Errors</a></li><li class="chapter-item expanded "><a href="../01-getting-started/05-session-types.html"><strong aria-hidden="true">2.5.</strong> Session Types</a></li></ol></li><li class="chapter-item expanded "><a href="../02-main-concepts/00-main-concepts.html"><strong aria-hidden="true">3.</strong> Main Concepts</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../02-main-concepts/01-protocols.html"><strong aria-hidden="true">3.1.</strong> Protocols</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/02-linear-context.html"><strong aria-hidden="true">3.2.</strong> Linear Context</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/03-sessions.html"><strong aria-hidden="true">3.3.</strong> Sessions</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/04-channel-selectors.html"><strong aria-hidden="true">3.4.</strong> Channel Selectors</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/05-running-sessions.html"><strong aria-hidden="true">3.5.</strong> Running Sessions</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/06-hole-driven-development.html"><strong aria-hidden="true">3.6.</strong> Hole Driven Development</a></li></ol></li><li class="chapter-item expanded "><a href="../03-basic-constructs/00-basic-constructs.html"><strong aria-hidden="true">4.</strong> Basic Constructs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../03-basic-constructs/01-termination.html"><strong aria-hidden="true">4.1.</strong> Termination</a></li><li class="chapter-item expanded "><a href="../03-basic-constructs/02-send-receive-values.html"><strong aria-hidden="true">4.2.</strong> Send / Receive Values</a></li><li class="chapter-item expanded "><a href="../03-basic-constructs/03-send-receive-channels.html"><strong aria-hidden="true">4.3.</strong> Send / Receive Channels</a></li><li class="chapter-item expanded "><a href="../03-basic-constructs/04-external-choice.html"><strong aria-hidden="true">4.4.</strong> External Choice</a></li><li class="chapter-item expanded "><a href="../03-basic-constructs/05-internal-choice.html"><strong aria-hidden="true">4.5.</strong> Internal Choice</a></li></ol></li><li class="chapter-item expanded "><a href="../04-advanced-constructs/00-advanced-constructs.html"><strong aria-hidden="true">5.</strong> Advanced Constructs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../04-advanced-constructs/01-recursive-session-types.html"><strong aria-hidden="true">5.1.</strong> Recursive Session Types</a></li><li class="chapter-item expanded "><a href="../04-advanced-constructs/02-communication.html" class="active"><strong aria-hidden="true">5.2.</strong> Communication</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Shared Session Types</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">7.</strong> Example Usage</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">7.1.</strong> Communication Protocols</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">7.2.</strong> Shared Resources</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">8.</strong> Ferrite Internals</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">8.1.</strong> Higher Kinded Types</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">8.2.</strong> Cloaking Constraints</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">8.3.</strong> Optics</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">8.4.</strong> Row Polymorphism</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">9.</strong> Conclusion</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">10.</strong> TODO</div></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../ferrite.html"><strong aria-hidden="true">1.</strong> Writing Session-Typed Ferrite Programs in Rust</a></li><li class="chapter-item expanded "><a href="../01-getting-started/00-getting-started.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../01-getting-started/01-installation.html"><strong aria-hidden="true">2.1.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../01-getting-started/02-hello-world.html"><strong aria-hidden="true">2.2.</strong> Hello World</a></li><li class="chapter-item expanded "><a href="../01-getting-started/03-communication.html"><strong aria-hidden="true">2.3.</strong> Client Communication</a></li><li class="chapter-item expanded "><a href="../01-getting-started/04-type-errors.html"><strong aria-hidden="true">2.4.</strong> Type Errors</a></li><li class="chapter-item expanded "><a href="../01-getting-started/05-session-types.html"><strong aria-hidden="true">2.5.</strong> Session Types</a></li></ol></li><li class="chapter-item expanded "><a href="../02-main-concepts/00-main-concepts.html"><strong aria-hidden="true">3.</strong> Main Concepts</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../02-main-concepts/01-protocols.html"><strong aria-hidden="true">3.1.</strong> Protocols</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/02-linear-context.html"><strong aria-hidden="true">3.2.</strong> Linear Context</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/03-sessions.html"><strong aria-hidden="true">3.3.</strong> Sessions</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/04-channel-selectors.html"><strong aria-hidden="true">3.4.</strong> Channel Selectors</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/05-running-sessions.html"><strong aria-hidden="true">3.5.</strong> Running Sessions</a></li><li class="chapter-item expanded "><a href="../02-main-concepts/06-hole-driven-development.html"><strong aria-hidden="true">3.6.</strong> Hole Driven Development</a></li></ol></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/00-ferrite-constructs.html"><strong aria-hidden="true">4.</strong> Ferrite Constructs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../03-ferrite-constructs/01-termination.html"><strong aria-hidden="true">4.1.</strong> Termination</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/02-forward.html"><strong aria-hidden="true">4.2.</strong> Forward</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/03-include.html"><strong aria-hidden="true">4.3.</strong> Include</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/04-apply.html"><strong aria-hidden="true">4.4.</strong> Apply</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/05-step.html"><strong aria-hidden="true">4.5.</strong> Step</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/06-run-session.html"><strong aria-hidden="true">4.6.</strong> Run Session</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/07-receive-value.html"><strong aria-hidden="true">4.7.</strong> Receive Value</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/08-send-value.html"><strong aria-hidden="true">4.8.</strong> Send Value</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/09-receive-channel.html"><strong aria-hidden="true">4.9.</strong> Receive Channel</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/10-send-channel.html"><strong aria-hidden="true">4.10.</strong> Send Channel</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/11-external-choice.html"><strong aria-hidden="true">4.11.</strong> External Choice</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/12-internal-choice.html"><strong aria-hidden="true">4.12.</strong> Internal Choice</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/13-n-ary-choice.html" class="active"><strong aria-hidden="true">4.13.</strong> N-ary Choice</a></li><li class="chapter-item expanded "><a href="../03-ferrite-constructs/14-recursive.html"><strong aria-hidden="true">4.14.</strong> Recursive Session Types</a></li></ol></li><li class="chapter-item expanded "><a href="../04-shared-sesion-types/00-shared-session-types.html"><strong aria-hidden="true">5.</strong> Shared Session Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../04-shared-sesion-types/01-shared-provider.html"><strong aria-hidden="true">5.1.</strong> Shared Provider</a></li><li class="chapter-item expanded "><a href="../04-shared-sesion-types/02-run-shared-session.html"><strong aria-hidden="true">5.2.</strong> Run Shared Session</a></li><li class="chapter-item expanded "><a href="../04-shared-sesion-types/03-shared-client.html"><strong aria-hidden="true">5.3.</strong> Shared Client</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> TODO</div></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -159,19 +162,58 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1><a class="header" href="#communication" id="communication">Communication</a></h1>
-<p>(TODO)</p>
+                        <h1><a class="header" href="#n-ary-choice" id="n-ary-choice">N-ary Choice</a></h1>
+<pre><code class="language-rust noplaypen">macro define_choice! {
+  $choice ;
+  $label1: $protocol1,
+  $label2: $protocol2,
+  ...
+}
+</code></pre>
+<ul>
+<li>
+<p>Define N branches of labeled choices</p>
+</li>
+<li>
+<p>Choices are in the form <code>{ L0: A0, L1: A1, ...  }</code> are desugard into
+<code>HList![A0, A1, ...]</code>.</p>
+</li>
+<li>
+<p>Labeled are defined as type aliases to <em>prisms</em>, e.g.</p>
+<pre><code class="language-rust noplaypen">type L0 = Z;
+type L1 = S&lt;Z&gt;;
+...
+</code></pre>
+</li>
+</ul>
+<h2><a class="header" href="#example-either" id="example-either">Example: Either</a></h2>
+<pre><code class="language-rust noplaypen">define_choice! { Either&lt;A, B&gt;;
+  Left: A,
+  Right: B,
+}
+</code></pre>
+<h2><a class="header" href="#example" id="example">Example</a></h2>
+<pre><code class="language-rust noplaypen">define_choice! { MyChoices;
+  Foo: ReceiveValue&lt;String, End&gt;,
+  Bar: SendValue&lt;u64, End&gt;,
+  Baz: End,
+}
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="../04-advanced-constructs/01-recursive-session-types.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../03-ferrite-constructs/12-internal-choice.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
+                        
+                            <a rel="next" href="../03-ferrite-constructs/14-recursive.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
                         
 
                         <div style="clear: both"></div>
@@ -181,11 +223,15 @@
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="../04-advanced-constructs/01-recursive-session-types.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../03-ferrite-constructs/12-internal-choice.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
+                
+                    <a rel="next" href="../03-ferrite-constructs/14-recursive.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
                 
             </nav>
 
