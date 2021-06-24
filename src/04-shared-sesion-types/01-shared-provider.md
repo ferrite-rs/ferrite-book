@@ -4,7 +4,7 @@
 
 ```rust, noplaypen
 fn accept_shared_session<A1, A2>(
-  cont: impl FnOnce() -> Session<A2>
+  cont: Session<A2>
 ) -> SharedSession<LinearToShared<A1>>
 ```
 
@@ -48,3 +48,13 @@ fn detach_shared_session<A>(
 ```rust, noplaypen
 {{#include ../../code/src/constructs/shared.rs:provider}}
 ```
+
+## Shared Forward
+
+```rust, noplaypen
+fn shared_forward<A, C>(
+  channel: SharedChannel<LinearToShared<A>>
+) -> PartialSession<C, SharedToLinear<A>>
+```
+
+- Forward all subsequent shared acquires to another shared process connected to the given shared channel

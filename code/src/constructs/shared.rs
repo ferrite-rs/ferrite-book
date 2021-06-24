@@ -5,9 +5,10 @@ fn shared_counter(
   count: u64
 ) -> SharedSession<LinearToShared<SendValue<u64, Release>>>
 {
-  accept_shared_session(move || {
-    send_value(count, detach_shared_session(shared_counter(count + 1)))
-  })
+  accept_shared_session(send_value(
+    count,
+    detach_shared_session(shared_counter(count + 1)),
+  ))
 }
 // ANCHOR_END: provider
 
