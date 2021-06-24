@@ -165,7 +165,7 @@
                         <h1><a class="header" href="#shared-provider" id="shared-provider">Shared Provider</a></h1>
 <h2><a class="header" href="#accept-shared-session" id="accept-shared-session">Accept Shared Session</a></h2>
 <pre><code class="language-rust noplaypen">fn accept_shared_session&lt;A1, A2&gt;(
-  cont: impl FnOnce() -&gt; Session&lt;A2&gt;
+  cont: Session&lt;A2&gt;
 ) -&gt; SharedSession&lt;LinearToShared&lt;A1&gt;&gt;
 </code></pre>
 <ul>
@@ -203,11 +203,20 @@
   count: u64
 ) -&gt; SharedSession&lt;LinearToShared&lt;SendValue&lt;u64, Release&gt;&gt;&gt;
 {
-  accept_shared_session(move || {
-    send_value(count, detach_shared_session(shared_counter(count + 1)))
-  })
+  accept_shared_session(send_value(
+    count,
+    detach_shared_session(shared_counter(count + 1)),
+  ))
 }
 </code></pre>
+<h2><a class="header" href="#shared-forward" id="shared-forward">Shared Forward</a></h2>
+<pre><code class="language-rust noplaypen">fn shared_forward&lt;A, C&gt;(
+  channel: SharedChannel&lt;LinearToShared&lt;A&gt;&gt;
+) -&gt; PartialSession&lt;C, SharedToLinear&lt;A&gt;&gt;
+</code></pre>
+<ul>
+<li>Forward all subsequent shared acquires to another shared process connected to the given shared channel</li>
+</ul>
 
                     </main>
 
