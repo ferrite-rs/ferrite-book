@@ -27,7 +27,7 @@ The type `SendValue<T, A>` defines a session type that sends a Rust value
 `End` defines a session type that simply terminates. When we combine both
 `SendValue` and `End` to get `SendValue<String, End>`, we are effectively
 defining a session type that sends a Rust value of type `String`, and then
-_continues_ as session type `End`, which happens to simply terminates.
+_continues_ as session type `End`, which happens to simply terminate.
 
 ## Hello World Provider
 
