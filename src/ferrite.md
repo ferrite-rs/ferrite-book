@@ -13,7 +13,7 @@ _affine_ types, which variables can be used _at most once_.
 
 You will learn how session types can be used to define
 _communication protocols_ between different parts of a Rust program.
-You will see how Ferrite can help elminate the boilerplates of managing
+You will see how Ferrite can help eliminate the boilerplates of managing
 communication using plain Rust channels, and enforce protocol
 compliance through linearity.
 
